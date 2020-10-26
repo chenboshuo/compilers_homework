@@ -1,0 +1,3 @@
+[submodule "myreport_template"]
+	path = myreport_template
+	url = git@github.com:chenboshuo/myreport_template.git
