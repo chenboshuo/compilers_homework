@@ -20,13 +20,13 @@ plt.rcParams.update({
 class Automata:
     """
     class to represent a automata
+
+    :param input_alphabet: a set of input symbols
+    :type input_alphabet: set,optional
     """
     pass
 
     def __init__(self, input_alphabet: set):
-        """
-        @param input_alphabet a set of input symbols
-        """
         self.states = set()  # a finite states of S
         self.input_alphabet = input_alphabet  # a set of input symbols
         self.start_state = None
@@ -58,8 +58,9 @@ class Automata:
 
     def add_transition_from_dict(self, translations: dict):
         """
-        @param translations translations[f][t] = d where f is from state,t in to state,
+        :param translations: translations[f][t] = d where f is from state,t in to state,
                                     d is the dict of states where d[state] = set of input symbols
+        :type translations: dict
         """
         for from_state, to_states in translations.items():
             for to_state, input_symbols in to_states.items():
@@ -84,8 +85,11 @@ class Automata:
     def draw(self, save=None):
         """
         draw the graph
-        @param save the save path
-        reference https://stackoverflow.com/a/20382152 
+
+        :param save: save the save path
+        reference_
+
+        .. _reference: https://stackoverflow.com/a/20382152
         """
         # create graph
         G = nx.DiGraph()
