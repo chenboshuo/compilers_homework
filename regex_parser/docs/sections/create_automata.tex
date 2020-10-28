@@ -1,0 +1,27 @@
+\documentclass[../main.tex]{subfiles}
+\graphicspath{{figures/}{../figures/}}
+
+\begin{document}
+\subsubsection{自动机的数据结构}
+  自动机由元组$(\Sigma,S,S_0,F,f)$
+  组成，其中
+  \begin{enumerate}
+    \item $\Sigma$ 为字符的集合,空串$\epsilon \notin \Sigma$
+    \item $S$为状态集合
+    \item $S_0 \in S$为初始态
+    \item $F \subset S$是终态的集合
+    \item $f:S \times (\Sigma \cup \{ \epsilon\}) \to S$为状态转换函数，
+      在程序中可以使用哈希表
+      $\func{hash}(S_i,S_{j_k}) = C_{ij_k}$，
+      $\forall c_{ij_k} \in C_{ij_k}$,
+      使得
+      $f(S_i,c_{ij_k}) = S_{j_k}$
+      在python中，
+      hash函数由字典数$\id{dict}$据类型直接实现,
+      对于两个变量的哈希表，
+      可以用字典嵌套字典实现
+  \end{enumerate}
+
+
+
+\end{document}
