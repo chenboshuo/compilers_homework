@@ -4,6 +4,17 @@ reference https://github.com/sdht0/automata-from-regex/blob/master/AutomataTheor
 """
 from matplotlib import pyplot as plt
 import networkx as nx
+import matplotlib as mpl
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Helvetica"]})
+# for Palatino and other serif fonts use:
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "serif",
+    "font.serif": ["Palatino"],
+})
 
 
 class Automata:
@@ -90,7 +101,7 @@ class Automata:
             string = []
             for char in label:
                 string.append(str(char))
-            edge_labels[edge] = ", ".join(string)
+            edge_labels[edge] = '$' + "| ".join(string)+'$'
 
         # draw
         nx.draw(G, pos, node_color='#dcfc7c')  # base graph
@@ -100,7 +111,9 @@ class Automata:
         nx.draw_networkx_nodes(
             G, pos, nodelist=[self.start_state], node_color='#fc7c7c')  # start state
         nx.draw_networkx_labels(G, pos, labels=node_labels)
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels,
+                                     #  horizontalalignment='left',
+                                     verticalalignment='top')
 
         if save:
             plt.savefig(save)
