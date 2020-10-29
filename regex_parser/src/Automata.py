@@ -23,8 +23,15 @@ class Automata:
 
     :param input_alphabet: a set of input symbols
     :type input_alphabet: set,optional
+
+    :ivar self.states: a finite states of S
+    :ivar self.transitions: 11
+    :ivar self.input_alphabet:  a set of input symbols
+    :ivar self.final_states: the set of final state
+    :ivar transitions: the transitions functions,
+        `translations[f][t] = d` where f is from state,t in to state,
+        d is the dict of states where d[state] = set of input symbols
     """
-    pass
 
     def __init__(self, input_alphabet: set):
         self.states = set()  # a finite states of S
@@ -34,18 +41,43 @@ class Automata:
         self.transitions = dict()
 
     @staticmethod
-    def epsilon():
+    def empty_string() -> str:
+        """get the symbol of empty_string symbol :math:`\epsilon`
+
+        :return: r'\epsilon'
+        :rtype: str
+        """
         return r'\epsilon'
 
     def set_start_state(self, state: int):
+        """set the start state
+
+        :param state: the label of start state
+        :type state: int
+        """
         self.start_state = state
         self.states.add(state)
 
     def add_final_states(self, *states):
+        """add the final states
+
+        :param states: the list of states
+        """
         for state in states:
             self.final_states.add(state)
 
-    def add_transition(self, from_state, to_state, input_symbols: set):
+    def add_transition(self, from_state:int, to_state:int, input_symbols: set):
+        """add the transition to transfer functions
+        (`self.transitions` in the program)
+
+        :param from_state: the begin state
+        :type from_state: int
+        :param to_state: the next state
+        :type to_state: int
+        :param input_symbols: the transfer symbols to the next states
+        :type input_symbols: set
+        """
+
         self.states.add(from_state)
         self.states.add(to_state)
         if from_state in self.transitions:
@@ -124,6 +156,7 @@ class Automata:
 
 
 if __name__ == "__main__":
+    # basic test
     test = Automata('ab')
     test.set_start_state(1)
     test.add_final_states(2)
