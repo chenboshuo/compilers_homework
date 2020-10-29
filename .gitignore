@@ -15,3 +15,9 @@
 
 # vscode
 .vscode
+
+# sphinx docs
+**/build/*
+
+# python
+**/__pycache__/*
