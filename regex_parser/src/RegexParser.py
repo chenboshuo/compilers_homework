@@ -87,7 +87,7 @@ class RegexParser:
         self.eat(c)
         return c
 
-    def parser_base_part(self) -> Automata:
+    def parse_base_part(self) -> Automata:
         """check the cases encountered
 
         .. code-block:: text
@@ -111,7 +111,7 @@ class RegexParser:
 if __name__ == "__main__":
     # test the cases of the only letter
     test1 = RegexParser("a")
-    print(test1.parser_base_part())
+    print(test1.parse_base_part())
     """output
         states: {1, 2}
         start state:    1
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     # test the escape symbol
     test2 = RegexParser("\*")
-    print(test2.parser_base_part())
+    print(test2.parse_base_part())
     """output
         states: {1, 2}
         start state:    1
