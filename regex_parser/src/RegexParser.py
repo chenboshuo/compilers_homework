@@ -70,6 +70,7 @@ class RegexParser:
 
         :param item: the next item
         :type item: str
+        :raises RuntimeError: get the wrong letter.
         """
         if(self.peek() == item):
             self.pattern = self.pattern[1:]
@@ -98,18 +99,35 @@ class RegexParser:
         :return: Automata of this part
         :rtype: Automata
         """
-        if self.peek() == '(':
-            pass
-        elif self.peek == '\\':
+        if self.peek() == '(': # TODO match ()
+            pass 
+        elif self.peek() == '\\':
             self.eat('\\')
             esc = self.next()
-            return Automata.basic_construct(self.next())
+            return Automata.basic_construct(esc)
         else:
             return Automata.basic_construct(self.next())
-        pass
 
 if __name__ == "__main__":
     # test the cases of the only letter
     test1 = RegexParser("a")
     print(test1.parser_base_part())
+    """output
+        states: {1, 2}
+        start state:    1
+        final state:    {2}
+        transitions:
+                1->2 on 'a'
+    """
 
+    # test the escape symbol
+    test2 = RegexParser("\*")
+    print(test2.parser_base_part())
+    """output
+        states: {1, 2}
+        start state:    1
+        final state:    {2}
+        transitions:
+                1->2 on '*'
+    """
+    
