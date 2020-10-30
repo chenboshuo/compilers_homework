@@ -24,15 +24,16 @@ class Automata:
     :param input_alphabet: a set of input symbols
     :type input_alphabet: set,optional
 
+    :ivar empty_string: empty string, denoted by :math:`\epsilon`
     :ivar self.states: a finite states of S
     :ivar self.transitions: 11
     :ivar self.input_alphabet:  a set of input symbols
     :ivar self.final_states: the set of final state
-    :ivar transitions: the transitions functions,
+    :ivar self.transitions: the transitions functions,
         `translations[f][t] = d` where f is from state,t in to state,
         d is the dict of states where d[state] = set of input symbols
     """
-
+    empty_string = r'\epsilon'
     def __init__(self, input_alphabet: set):
         self.states = set()  # a finite states of S
         self.input_alphabet = input_alphabet  # a set of input symbols
@@ -118,10 +119,8 @@ class Automata:
         """
         draw the graph
 
-        :param save: save the save path
-        reference_
-
-        .. _reference: https://stackoverflow.com/a/20382152
+        :param save: save the save path (`reference <https://stackoverflow.com/a/20382152>`_)
+        
         """
         # create graph
         G = nx.DiGraph()
@@ -154,6 +153,21 @@ class Automata:
         if save:
             plt.savefig(save)
 
+    @classmethod
+    def basic_construct(cls,symbol:str):
+        """construct NFA with a single symbol
+
+        :param symbol: the symbol
+        :type symbol: str
+        :return: a NFA
+        :rtype: Automata
+        """
+        basic = Automata(symbol)
+        basic.set_start_state(1)
+        basic.add_final_states(2)
+        basic.add_transition(1,2,symbol)
+        return basic
+
 
 if __name__ == "__main__":
     # basic test
@@ -166,13 +180,23 @@ if __name__ == "__main__":
     print(test.transitions)
     print(test)
     test.draw('../docs/figures/test_automata.pdf')
-""" output
-{1: {2: {'a', 'b'}, 3: {'b'}}}
-states: {1, 2, 3}
-start state:    1
-final state:    {2}
-transitions:
-        1->2 on 'a'
-        1->2 on 'b'
-        1->3 on 'b'
-"""
+    """ output
+    {1: {2: {'a', 'b'}, 3: {'b'}}}
+    states: {1, 2, 3}
+    start state:    1
+    final state:    {2}
+    transitions:
+            1->2 on 'a'
+            1->2 on 'b'
+            1->3 on 'b'
+    """
+
+    # test basic construct
+    print(Automata.basic_construct('a'))
+    """
+    states: {1, 2}
+    start state:    1
+    final state:    {2}
+    transitions:
+            1->2 on 'a'    
+    """
