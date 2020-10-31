@@ -116,6 +116,23 @@ class RegexParser:
             base = Automata.star_operation(base)
         
         return base
+    
+    def parse_term_part(self) -> Automata:
+        """check that it has not reached the boundary of a term or the end of the input:
+
+        .. code-block:: text
+
+            <term> ::= { <factor> }
+
+        :return: the NFA of this part
+        :rtype: Automata
+        """
+        factor = Automata.empty_construct()
+        while(self.pattern and self.peek != ')' and self.peek() != '|'):
+            next_factor = self.factor()
+            factor = Automata.link(factor, next_factor)
+        
+        return factor
 
 
 if __name__ == "__main__":
@@ -154,4 +171,4 @@ if __name__ == "__main__":
 
                 2->1 on '\epsilon'    
     """
-    
+

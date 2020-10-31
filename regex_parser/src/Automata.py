@@ -2,6 +2,8 @@
 filename src/Automata.py
 reference https://github.com/sdht0/automata-from-regex/blob/master/AutomataTheory.py
 """
+from __future__ import annotations # type hint within a class
+# see https://stackoverflow.com/questions/41135033/type-hinting-within-a-class
 from matplotlib import pyplot as plt
 import networkx as nx
 import matplotlib as mpl
@@ -115,7 +117,27 @@ class Automata:
             f"final state:\t{self.final_states}\n" \
             f"transitions:\n{trans}"
 
-    def draw(self, save=None):
+    def rename(self,offset:int) -> None:
+        """change the state name to prevent the conflict
+
+        :param offset: offset the number
+        :type offset: int
+        """
+        self.states = set(i+offset for i in self.states)
+        self.start_state += offset
+        self.final_states = set(i+offset for i in self.final_states)
+
+        # change the transition
+        new_transitions = dict()
+        for from_state, to_states in self.transitions.items():
+            new_transitions[from_state+offset] = dict()
+            for to_state in to_states.keys():
+                new_transitions[from_state+offset][to_state+offset] = \
+                    self.transitions[from_state][to_state]
+        
+        self.transitions = new_transitions
+
+    def draw(self, save=None)->None:
         """
         draw the graph
 
@@ -157,6 +179,15 @@ class Automata:
             plt.savefig(save)
 
     @classmethod
+    def empty_construct(cls):
+        """construct a empty construct of a automata
+
+        :return: the empty automata
+        :rtype: Automata
+        """
+        return cls.basic_construct(r'\epsilon')
+
+    @classmethod
     def basic_construct(cls,symbol:str):
         """construct NFA with a single symbol
 
@@ -175,6 +206,10 @@ class Automata:
     def star_operation(nfa):
         """process the star operation
 
+        .. note::
+
+            the nfa is changed after call the method
+
         :param nfa: the previous NFA
         :type nfa: Automata
         :return: the new NFA after processing star operation
@@ -187,27 +222,64 @@ class Automata:
         
         return nfa
 
+    @staticmethod
+    def concatenation(basic:Automata, addition:Automata) -> Automata:
+        """union two Automata
+
+        :param basic: this Automata will be changed after union
+        :type basic: Automata
+        :param addition: This Automata will be deleted after  union
+        :type addition: Automata
+        :return: [description]
+        :rtype: Automata
+        """
+        # to manage the state name conflict
+        offset = max(basic.states) 
+        addition.rename(offset)
+        
+        basic.add_transition_from_dict(addition.transitions)
+        for pre_final in basic.final_states:
+            basic.add_transition(pre_final,addition.start_state,
+                                    set([Automata.empty_string()]))
+        
+        basic.final_states = addition.final_states
+        return basic
+
 if __name__ == "__main__":
     # basic test
-    test = Automata('ab')
+    test = Automata(set('ab'))
     test.set_start_state(1)
     test.add_final_states(2)
     test.add_final_states(2)
     test.add_transition(1, 2, set(['a', 'b']))
-    test.add_transition(1, 3, set('b'))
+    test.add_transition(1, 1, set('b'))
     print(test.transitions)
     print(test)
     test.draw('../docs/figures/test_automata.pdf')
     """ output
-    {1: {2: {'a', 'b'}, 3: {'b'}}}
-    states: {1, 2, 3}
+    {1: {2: {'a', 'b'}, 1: {'b'}}}
+    states: {1, 2}
     start state:    1
     final state:    {2}
     transitions:
             1->2 on 'a'
             1->2 on 'b'
-            1->3 on 'b'
+            1->1 on 'b'
     """
+    print(test.transitions)
+    test.rename(3)
+    print(test)
+    """output
+        {1: {2: {'a', 'b'}, 1: {'b'}}}
+        states: {4, 5}
+        start state:    4
+        final state:    {5}
+        transitions:
+                4->5 on 'a'
+                4->5 on 'b'
+                4->4 on 'b'    
+        """
+
 
     # test basic construct
     test1 = Automata.basic_construct('a')
@@ -224,3 +296,21 @@ if __name__ == "__main__":
     test1 = Automata.star_operation(test1)
     print(test1)
     # test1.draw('../docs/figures/test_star.pdf')
+    # TODO debug
+
+    # test link operation
+    test2 = Automata.basic_construct('c')
+    print(Automata.concatenation(test,test2))
+    r"""output
+        states: {4, 5, 6, 7}
+        start state:    4
+        final state:    {7}
+        transitions:
+                4->5 on 'a'
+                4->5 on 'b'
+                4->4 on 'b'
+
+                6->7 on 'c'
+
+                5->6 on '\epsilon'
+    """
