@@ -3,6 +3,7 @@ filename src/Automata.py
 reference https://github.com/sdht0/automata-from-regex/blob/master/AutomataTheory.py
 """
 from __future__ import annotations  # type hint within a class
+from typing import *
 # see https://stackoverflow.com/questions/41135033/type-hinting-within-a-class
 from matplotlib import pyplot as plt
 import networkx as nx
@@ -92,7 +93,7 @@ class Automata:
         else:
             self.transitions[from_state] = {to_state: input_symbols}
 
-    def add_transition_from_dict(self, translations: dict):
+    def add_transition_from_dict(self, translations: Dict[int, Dict[int, set]]):
         """
         :param translations: translations[f][t] = d where f is from state,t in to state,
                                     d is the dict of states where d[state] = set of input symbols
@@ -138,46 +139,45 @@ class Automata:
 
         self.transitions = new_transitions
 
-    def draw(self, save=None) -> None:
+    def draw(self, save='temp.pdf',seed:int=None) -> None:
         """
         draw the graph
 
         :param save: save the save path (`reference <https://stackoverflow.com/a/20382152>`_)
+        :type save: str
+        :param seed: the node location random seed
+        :type seed: int
 
-        .. warning::
-            It not work in multiple graph
+        if you haven't installed network2tikz,
+        you need install it by 
+
+        .. code-block:: bash
+
+            pip install -U network2tikz
 
         """
-        # create graph
-        G = nx.DiGraph()
-        # G = nx.MultiDiGraph()
+        from network2tikz import plot
+        nodes = list(self.states)
+        node_colors = [
+            'green!20' if node not in self.final_states else 'blue!20' for node in self.states]
+        node_colors[nodes.index(self.start_state)] = "red!20"
+        edges = []
+        edge_labels = []
         for from_state, to_states in self.transitions.items():
             for to_state, symbols in to_states.items():
-                G.add_edge(from_state, to_state, trans=symbols)
+                edges.append((from_state, to_state))
+                labels = []
+                for symbol in symbols:
+                    labels.append(symbol)
+                edge_labels.append("| ".join(labels))
 
-        # get attributes
-        node_labels = {node: str(node) for node in G.nodes()}
-        pos = nx.spring_layout(G)
-        edge_labels = nx.get_edge_attributes(G, 'trans')
-        for edge, label in edge_labels.items():
-            string = []
-            for char in label:
-                string.append(str(char))
-            edge_labels[edge] = '$' + "| ".join(string)+'$'
-
-        # draw
-        nx.draw(G, pos, node_color='#dcfc7c')  # base graph
-
-        nx.draw_networkx_nodes(G, pos,
-                               nodelist=list(self.final_states))  # final states
-        nx.draw_networkx_nodes(
-            G, pos, nodelist=[self.start_state], node_color='#fc7c7c')  # start state
-        nx.draw_networkx_labels(G, pos, labels=node_labels)
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels,
-                                     #  horizontalalignment='left',
-                                     verticalalignment='top')
-        if save:
-            plt.savefig(save)
+        plot((nodes, edges), save,
+             seed=seed, 
+             node_label_as_id=True,
+             node_color=node_colors,
+             edge_label=edge_labels,
+             edge_math_mode=True, edge_directed=True, edge_curved=0.2,
+             edge_label_position='left')
 
     @classmethod
     def empty_construct(cls):
@@ -280,7 +280,8 @@ class Automata:
         new_final_state = max(parallel.states)+1
         pre_finals = basic.final_states.union(parallel.final_states)
         for pre_final in pre_finals:
-            basic.add_transition(pre_final, new_final_state, Automata.empty_string)
+            basic.add_transition(
+                pre_final, new_final_state, Automata.empty_string)
         basic.final_states = set([new_final_state])
 
         del parallel
@@ -297,7 +298,7 @@ if __name__ == "__main__":
     test.add_transition(1, 1, set('b'))
     print(test.transitions)
     print(test)
-    test.draw('../docs/figures/test_automata.pdf')
+    test.draw('../docs/figures/test_automata.pdf',seed=2) # 2
     """ output
     {1: {2: {'a', 'b'}, 1: {'b'}}}
     states: {1, 2}
@@ -323,7 +324,7 @@ if __name__ == "__main__":
         """
 
     # test basic construct
-    test1 = Automata.basic_construct('a')
+    test1 = Automata.basic_construct(set(['a']))
     print(test1)
     """
     states: {1, 2}
@@ -336,7 +337,7 @@ if __name__ == "__main__":
     # test star operation
     test1 = Automata.star_operation(test1)
     print(test1)
-    # test1.draw('../docs/figures/test_star.pdf')
+    test1.draw('../docs/figures/test_star.pdf')
     # TODO debug
 
     # test link operation
@@ -359,7 +360,7 @@ if __name__ == "__main__":
     # test parallel union
     test3 = Automata.basic_construct(set('d'))
     test4 = Automata.basic_construct(set('e'))
-    test3 = Automata.union(test3,test4)
+    test3 = Automata.union(test3, test4)
     print(test3)
     r"""output
         states: {1, 2, 3, 4, 5, 6}
