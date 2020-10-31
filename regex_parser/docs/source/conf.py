@@ -56,3 +56,36 @@ html_theme = 'nature'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# add source to pdf
+# reference https://github.com/sphinx-doc/sphinx/issues/6094
+latex_elements = {
+    "papersize": "letterpaper",
+    "pointsize": "10pt",
+    "figure_align": "htbp",
+    "preamble": r"""
+        \usepackage{listings}
+        \definecolor{dkgreen}{rgb}{0,0.6,0}
+        \definecolor{gray}{rgb}{0.5,0.5,0.5}
+        \definecolor{mauve}{rgb}{0.58,0,0.82}        \lstset{
+            language=Python,                 % the language of the code
+            frame=tb,
+            aboveskip=3mm,
+            belowskip=3mm,
+            showstringspaces=false,
+            columns=flexible,
+            framerule=1pt,
+            rulecolor=\color{gray!35},
+            backgroundcolor=\color{gray!5},
+            basicstyle={\small\ttfamily},
+            numbers=left,
+            numberstyle=\tiny\color{gray},
+            keywordstyle=\color{blue},
+            commentstyle=\color{dkgreen},
+            stringstyle=\color{mauve},
+            breaklines=true,
+            breakatwhitespace=true,
+            tabsize=3
+        }
+    """,
+}
