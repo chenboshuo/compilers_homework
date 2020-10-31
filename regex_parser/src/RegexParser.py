@@ -107,6 +107,16 @@ class RegexParser:
             return Automata.basic_construct(esc)
         else:
             return Automata.basic_construct(self.next())
+    
+    def parse_factor_part(self) -> Automata:
+        base = self.parse_base_part()
+
+        while(self.pattern and self.peek() == '*'):
+            self.eat('*')
+            base = Automata.star_operation(base)
+        
+        return base
+
 
 if __name__ == "__main__":
     # test the cases of the only letter
@@ -129,5 +139,19 @@ if __name__ == "__main__":
         final state:    {2}
         transitions:
                 1->2 on '*'
+    """
+
+    # test parse factor part
+    test3 = RegexParser('a*')
+    print(test3.parse_factor_part())
+    """output
+        states: {1, 2}
+        start state:    1
+        final state:    {2}
+        transitions:
+                1->2 on '\epsilon'
+                1->2 on 'a'
+
+                2->1 on '\epsilon'    
     """
     

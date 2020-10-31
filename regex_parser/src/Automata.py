@@ -43,7 +43,7 @@ class Automata:
 
     @staticmethod
     def empty_string() -> str:
-        """get the symbol of empty_string symbol :math:`\epsilon`
+        r"""get the symbol of empty_string symbol :math:`\epsilon`
 
         :return: r'\epsilon'
         :rtype: str
@@ -120,10 +120,14 @@ class Automata:
         draw the graph
 
         :param save: save the save path (`reference <https://stackoverflow.com/a/20382152>`_)
+
+        .. warning::
+            It not work in multiple graph
         
         """
         # create graph
         G = nx.DiGraph()
+        # G = nx.MultiDiGraph()
         for from_state, to_states in self.transitions.items():
             for to_state, symbols in to_states.items():
                 G.add_edge(from_state, to_state, trans=symbols)
@@ -149,7 +153,6 @@ class Automata:
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels,
                                      #  horizontalalignment='left',
                                      verticalalignment='top')
-
         if save:
             plt.savefig(save)
 
@@ -165,9 +168,24 @@ class Automata:
         basic = Automata(symbol)
         basic.set_start_state(1)
         basic.add_final_states(2)
-        basic.add_transition(1,2,symbol)
+        basic.add_transition(1,2,set(symbol))
         return basic
+    
+    @staticmethod
+    def star_operation(nfa):
+        """process the star operation
 
+        :param nfa: the previous NFA
+        :type nfa: Automata
+        :return: the new NFA after processing star operation
+            that means add two string in the begin state and end state
+        :rtype: Automata
+        """
+        for final_state in nfa.final_states:
+            nfa.add_transition(nfa.start_state, final_state, set([r"\epsilon"]))
+            nfa.add_transition(final_state,nfa.start_state,set([r"\epsilon"]))
+        
+        return nfa
 
 if __name__ == "__main__":
     # basic test
@@ -192,7 +210,8 @@ if __name__ == "__main__":
     """
 
     # test basic construct
-    print(Automata.basic_construct('a'))
+    test1 = Automata.basic_construct('a')
+    print(test1)
     """
     states: {1, 2}
     start state:    1
@@ -200,3 +219,8 @@ if __name__ == "__main__":
     transitions:
             1->2 on 'a'    
     """
+
+    # test star operation
+    test1 = Automata.star_operation(test1)
+    print(test1)
+    # test1.draw('../docs/figures/test_star.pdf')
