@@ -100,7 +100,11 @@ class RegexParser:
         :rtype: Automata
         """
         if self.peek() == '(': # TODO match ()
-            pass 
+            self.eat('(')
+            r = self.parse_regex()
+            self.eat(')')
+            return r
+
         elif self.peek() == '\\':
             self.eat('\\')
             esc = self.next()
@@ -128,11 +132,32 @@ class RegexParser:
         :rtype: Automata
         """
         factor = Automata.empty_construct()
-        while(self.pattern and self.peek != ')' and self.peek() != '|'):
+        while(self.pattern and self.peek() != ')' and self.peek() != '|'):
             next_factor = self.parse_factor_part()
             factor = Automata.concatenation(factor, next_factor)
         
         return factor
+
+    def parse_regex(self) -> Automata:
+        """For regex() method, we know that we must parse at least one term, 
+        and whether we parse another 
+
+        .. code-block::text
+
+            <regex> ::= <term> '|' <regex>
+                      |  <term>
+
+        :return: the NFA
+        :rtype: Automata
+        """
+        term = self.parse_term_part()
+        if(self.pattern and self.peek() == '|'):
+            self.eat('|')
+            regex = self.parse_regex()
+            return Automata.union(term, regex)
+        else:
+            return term
+            
 
 
 if __name__ == "__main__":
@@ -161,7 +186,7 @@ if __name__ == "__main__":
     # test parse factor part
     test3 = RegexParser('a*')
     print(test3.parse_factor_part())
-    """output
+    r"""output
         states: {1, 2}
         start state:    1
         final state:    {2}
@@ -189,3 +214,5 @@ if __name__ == "__main__":
 
                 4->5 on '\epsilon'
     """    
+    nfa1 = RegexParser('(a|b)').parse_regex()
+    print(nfa1)
