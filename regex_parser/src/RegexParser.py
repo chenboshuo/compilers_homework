@@ -129,8 +129,8 @@ class RegexParser:
         """
         factor = Automata.empty_construct()
         while(self.pattern and self.peek != ')' and self.peek() != '|'):
-            next_factor = self.factor()
-            factor = Automata.link(factor, next_factor)
+            next_factor = self.parse_factor_part()
+            factor = Automata.concatenation(factor, next_factor)
         
         return factor
 
@@ -172,3 +172,20 @@ if __name__ == "__main__":
                 2->1 on '\epsilon'    
     """
 
+    test4 = RegexParser('ab')
+    print(test4.parse_term_part())
+    r"""output
+        states: {1, 2, 3, 4, 5, 6}
+        start state:    1
+        final state:    {6}
+        transitions:
+                1->2 on '\epsilon'
+
+                3->4 on 'a'
+
+                2->3 on '\epsilon'
+
+                5->6 on 'b'
+
+                4->5 on '\epsilon'
+    """    

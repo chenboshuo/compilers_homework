@@ -185,7 +185,7 @@ class Automata:
         :return: the empty automata
         :rtype: Automata
         """
-        return cls.basic_construct(r'\epsilon')
+        return cls.basic_construct(set([r'\epsilon']))
 
     @classmethod
     def basic_construct(cls,symbol:str):
