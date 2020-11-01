@@ -1,4 +1,4 @@
-\documentclass[../main.tex]{subfiles}
+\documentclass[../report.tex]{subfiles}
 \graphicspath{{figures/}{../figures/}}
 
 \begin{document}
@@ -22,6 +22,67 @@
       可以用字典嵌套字典实现
   \end{enumerate}
 
+\subsubsection{自动机的算法}
+  设正则表达式$s,t$，
+  其对应NFA为$N(s), N(t)$
+
+  对于表达式$s|t$
+  对于运算链接(concatenation)$N(s)N(t)$,
+  对应的算法如%
+  \cref{alg:concatenation}
+  \begin{algorithm}[H]
+    \caption{concatenation运算}
+    \begin{codebox}
+      \Procname{concatenation($N(s)$,$N(t)$)}
+        \li renameState($N(t)$) \Comment 修改$N(t)$状态名，防止歧义
+        \li merge($N(s),N(t)$) \Comment 将$N(t)$ 的状态和转换函数复制给$N(s)$
+        \li $F_{s} \gets F_{t}$ \Comment $N(s)$的终态变为 $N(t)$ 的终态 $F_{t}$
+        \li $\func{free}(N(t))$ \Comment 释放$N(t)$ 的空间
+        \li \Return $N(s)$
+    \end{codebox}
+    \label{alg:concatenation}
+  \end{algorithm}
+
+
+
+  并运算(union)$N(s) | N(t)$
+  % \cref{alg:union}
+  \begin{algorithm}[H]
+    \caption{union 运算}
+    \begin{codebox}
+      \Procname{union($N(s),N(t)$)}
+        \li rename($N(s)$)
+        \li rename($N(t)$)
+        \li copy($N(s),N(t)$)
+        \li \kw{new} $S_0$ \Comment 新初态
+        \li \kw{new} $S_t$ \Comment 新终态
+        \li addEdge($S_0$,$S_0^{(s)}$,$\epsilon$) \Comment $S_0^{(s)}$ 为原$N(s)$的初态
+        \li addEdge($S_0$,$S_0^{(t)}$,$\epsilon$) \Comment $S_0^{(s)}$ 为原$N(t)$的初态
+        \li\For $S_f \in F^{(s)} \cap F^{(t)}$:
+        \Then
+          \li addEdge($S_f,S_t,\epsilon$)
+        \End
+        \li $F \gets \{ S_t\} $  \Comment 新的终态集
+        \li free($N(t)$)
+        \li \Return $N(s)$
+    \end{codebox}
+    \label{alg:union}
+  \end{algorithm}
+
+  % \cref{alg:star}
+  \begin{algorithm}[H]
+    \caption{star运算}
+    \begin{codebox}
+      \Procname{star($N(t)$)}
+        \li \For $S_f \in F$:
+        \Then
+          \li addEdge($S_f,S_0,\epsilon$)
+          \li addEdge($S_0,S_f,\epsilon$)
+        \End
+        \li \Return $N(t)$
+    \end{codebox}
+    \label{alg:star}
+  \end{algorithm}
 
 
 \end{document}

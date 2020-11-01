@@ -4,6 +4,7 @@
 \author{陈伯硕}
 \date{\today}
 
+
 \usepackage{subfiles}
 \begin{document}
 \maketitle
@@ -17,31 +18,26 @@
   \subsection{自动机的数据结构与算法}
     \subfile{sections/create_automata}
 \section{实验步骤与结果}
-  \subsection{代码测试自动机}
+  \subsection{代码测试自动机的基本构造}
     \subfile{sections/test_automaton}
+  \subsection{测试自动机的方法和运算}
+    \subfile{sections/test_operation}
+
 
 
 
 \section{实验总结}
-% \section{源代码}
-% \section{section}
-% \subsection{subsection}
-% \subsubsection{subsubsection}
 
-% \section{插入代码}
-% \begin{codebox}
-%   \Procname{$bubble\_sort$($A$: the array, $n$: the length of nums)}
-%   \li $a = 1$
-%   % \li
-
-% \end{codebox}
 
 \bibliography{reference}
 \nocite{alfred_v_aho_compilers_2006}
 \nocite{automata-from-regex}
+\nocite{recursive-descent}
 
 \begin{appendices}
   \section{自动机的相关方法与测试源代码}
     \lstinputlisting[language=python]{../src/Automata.py}
+  \section{正则表达式的解析}
+    \lstinputlisting[language=python]{../src/RegexParser.py}
 \end{appendices}
 \end{document}
