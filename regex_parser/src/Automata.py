@@ -172,7 +172,9 @@ class Automata:
                 edge_labels.append("| ".join(labels))
 
         plot((nodes, edges), save,
+            #  layout="spring_layout",
              seed=seed, 
+             canvas=(10,10),
              node_label_as_id=True,
              node_color=node_colors,
              edge_label=edge_labels,
@@ -261,7 +263,7 @@ class Automata:
         :rtype: Automata
         """
         # rename the two graph
-        basic.rename(1)
+        basic.rename(offset=1)
         offset = max(basic.states)
         parallel.rename(offset)
 
@@ -289,6 +291,9 @@ class Automata:
 
 
 if __name__ == "__main__":
+    def figure_path(s):
+        return f"../docs/figures/{s}.pdf"
+
     # basic test
     test = Automata(set('ab'))
     test.set_start_state(1)
@@ -325,6 +330,7 @@ if __name__ == "__main__":
 
     # test basic construct
     test1 = Automata.basic_construct(set(['a']))
+    test1.draw(save="../docs/figures/basic_a.pdf",seed=1)
     print(test1)
     """
     states: {1, 2}
@@ -337,39 +343,53 @@ if __name__ == "__main__":
     # test star operation
     test1 = Automata.star_operation(test1)
     print(test1)
-    test1.draw('../docs/figures/test_star.pdf')
-    # TODO debug
+    test1.draw('../docs/figures/test_star.pdf',seed=1)
+    r"""output
+        states: {1, 2}
+        start state:    1
+        final state:    {2}
+        transitions:
+                1->2 on '\epsilon'
+                1->2 on 'a'
+
+                2->1 on '\epsilon'
+    """
 
     # test link operation
-    test2 = Automata.basic_construct('c')
-    print(Automata.concatenation(test, test2))
+    test1 = Automata.basic_construct(set(['a']))
+    test2 = Automata.basic_construct(set(['b']))
+    test2.draw(figure_path('basic_b'),seed=1)
+    print(Automata.concatenation(test1, test2))
+    test1.draw(save=figure_path('test_concatenation'),seed=2) # 2
     r"""output
-        states: {4, 5, 6, 7}
-        start state:    4
-        final state:    {7}
+        states: {1, 2}
+        start state:    1
+        final state:    {2}
         transitions:
-                4->5 on 'a'
-                4->5 on 'b'
-                4->4 on 'b'
+                1->2 on 'a'
+                1->2 on '\epsilon'
 
-                6->7 on 'c'
-
-                5->6 on '\epsilon'
+                2->1 on '\epsilon'    
     """
 
     # test parallel union
-    test3 = Automata.basic_construct(set('d'))
-    test4 = Automata.basic_construct(set('e'))
-    test3 = Automata.union(test3, test4)
+    test1 = Automata.basic_construct(set(['a']))
+    test2 = Automata.basic_construct(set(['b']))
+    test3 = Automata.union(test1, test2)
+    test3.draw(save=figure_path('test_union'),seed=79744993) # 1111
+    # import random
+    # for i in range(50):
+    #     s = int(random.random() * 100000000)  
+    #     test3.draw(f'/tmp/{s}.pdf',seed=s)
     print(test3)
     r"""output
         states: {1, 2, 3, 4, 5, 6}
         start state:    1
         final state:    {6}
         transitions:
-                2->3 on 'd'
+                2->3 on 'a'
 
-                4->5 on 'e'
+                4->5 on 'b'
 
                 1->2 on '\epsilon'
                 1->4 on '\epsilon'

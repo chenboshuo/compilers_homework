@@ -99,7 +99,7 @@ class RegexParser:
         :return: Automata of this part
         :rtype: Automata
         """
-        if self.peek() == '(': # TODO match ()
+        if self.peek() == '(': 
             self.eat('(')
             r = self.parse_regex()
             self.eat(')')
@@ -161,6 +161,9 @@ class RegexParser:
 
 
 if __name__ == "__main__":
+    def figure_path(s):
+        return f"../docs/figures/{s}.pdf"
+    
     # test the cases of the only letter
     test1 = RegexParser("a")
     print(test1.parse_base_part())
@@ -216,3 +219,20 @@ if __name__ == "__main__":
     """    
     nfa1 = RegexParser('(a|b)').parse_regex()
     print(nfa1)
+    # # which is best
+    # import random
+    # import os
+    # import time
+    # l = []
+    # for i in range(100):
+    #     s = int(random.random() * 100000000)  
+    #     nfa1.draw(f'/tmp/ab/{s}.pdf',seed=s)
+    #     l.append(s)
+    # time.sleep(10)
+    # for s in l:
+    #     os.system(f"pdftoppm /tmp/ab/{s}.pdf /tmp/ab/{s} -png")
+    nfa1.draw(save=figure_path("a|b"),seed=79870681)
+
+    # test a complex
+    nfa2 = RegexParser('(a|b)*ab').parse_regex()
+    nfa2.draw(save=figure_path('complex'),seed=53138909)
