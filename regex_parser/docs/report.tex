@@ -17,24 +17,39 @@
 \section{算法设计}
   \subsection{自动机的数据结构与算法}
     \subfile{sections/create_automata}
+  \subsection{正则表达式解析}
+    \subfile{sections/parse}
+
 \section{实验步骤与结果}
   \subsection{代码测试自动机的基本构造}
     \subfile{sections/test_automaton}
   \subsection{测试自动机的方法和运算}
     \subfile{sections/test_operation}
+  \subsection{测试正则表达式解析}
+    \subfile{sections/test_parser}
 
 
 
 
 \section{实验总结}
-
+  \subfile{sections/opinion}
 
 \bibliography{reference}
-\nocite{alfred_v_aho_compilers_2006}
-\nocite{automata-from-regex}
-\nocite{recursive-descent}
+
 
 \begin{appendices}
+  \section{依赖的安装}
+    本文代码的Atutomata.draw()方法依赖
+    \lstinputlisting{../src/requirements.txt}
+    可以通过以下命令在清华镜像网站安装全部
+    \begin{lstlisting}
+    pip install -i http://mirrors.aliyun.com/pypi/simple \
+    --trusted-host mirrors.aliyun.com/pypi/simple/ \
+    -r requirements.txt
+    \end{lstlisting}
+    如果在程序中不使用画图功能，
+    可以忽略安装
+
   \section{自动机的相关方法与测试源代码}
     \lstinputlisting[language=python]{../src/Automata.py}
   \section{正则表达式的解析}

@@ -1,0 +1,135 @@
+\documentclass[../report]{subfiles}
+\graphicspath{{figures/}{../figures/}}
+
+% \renewcommand{\Comment}{$\hspace*{-0.075em}\rhd$ }
+\begin{document}
+正则表达式的结构可以由以下解析式组成
+
+\begin{lstlisting}[numbers=none]
+<regex>   ::= <term> '|' <regex>
+            |  <term>
+
+<term>    ::= { <factor> }
+
+<factor>  ::= <base> { '*' }
+
+<base>    ::= <char>
+            |  '\' <char>
+            |  '(' <regex> ')'
+\end{lstlisting}
+
+这些算法可以用递归实现，
+我们首先完成以下函数
+\begin{enumerate}
+  \item peek() 查看模式串中下一个字符
+  \item eat($c$) 检查下一个字符是否为$c$，
+    如果是，将模式串中去掉该元素，
+    即返回第一个字符之后的元素
+  \item next() 返回下一个元素，并在模式串中去掉该元素
+\end{enumerate}
+
+我们从最简单的部分开始，
+首先通过%
+\cref{alg:base}
+检测base,
+处理转义符，括号和普通单个字母
+
+\begin{algorithm}[H]
+  \caption{base 部分的解析}
+  \begin{codebox}
+    \Procname{base()}
+      \li \If peek() $=$ '(':  \Comment[2] 匹配括号
+      \Then
+        \li eat('(') \Comment[3.5] 处理掉'('
+        \li r $\gets$ regex() \Comment[1.5] 这一部分为另一个正则表达式,在\cref{alg:regex}实现
+        \li eat(')')
+        \li \Return r \Comment[3] 此时括号内的表达式的NFA是解析结果
+      \End
+      \li \Else \If peek() $=$ '\textbackslash': \Comment[2] 处理转义符之后的字符
+      \Then
+        \li eat(‘\textbackslash’)
+        \li esc $\gets$ next() \Comment[3.5] 获得转义符之后的一个字符
+        \li \Return basicConstruct(esc) \Comment[1] 创建只含有$\id{esc}$的NFA
+      \End
+      \li \Else:
+      \Then
+        \li \Return basicConstruct(next()) \Comment[1] 只有一种字母的情况
+      \End
+  \end{codebox}
+  \label{alg:base}
+\end{algorithm}
+
+factor 部分由
+base 和若干个*组成，
+我们对\cref{alg:base}
+的结果进行star运算(\cref{alg:star})
+具体过程如%
+\cref{alg:factor}
+
+\begin{algorithm}[H]
+  \caption{factor 部分的解析}
+  \begin{codebox}
+    \Procname{factor()}
+      \li base $\gets$ base() \Comment[1] 从\cref{alg:base} 中得到*之前部分的NFA
+      \li \While parttern \kw{and} peek() $=$ '*':
+        \Comment[1] 处理所有'*'字符，并进行相应运算
+      \Then
+        \li eat('*')
+        \li star(base)
+          \Comment[1]  对base进行star运算(\cref{alg:star})
+      \End
+      \li \Return base
+  \end{codebox}
+  \label{alg:factor}
+\end{algorithm}
+
+term 部分由若干个 factor 组成，
+他们之间用 concatenation 运算链接
+(\cref{alg:concatenation})
+具体实现如%
+\cref{alg:term}
+
+\begin{algorithm}[H]
+  \caption{term 部分的解析}
+  \begin{codebox}
+    \Procname{term()}
+      \li term $\gets$ basicConstruct($\epsilon$)
+        \Comment[1] 只有空串转换的NFA
+      \li \While pattern \kw{and} peek() $\neq$ ')' \kw{and} peek() $\neq$ '*': \Comment 下一个字符不能是需要运算符号
+      \Then
+        \li f $\gets$ factor() \Comment 读取下一个term(\cref{alg:factor})
+        \li term $\gets$  concatenation(term, f)
+          \Comment 更新 term
+      \End
+      \li \Return term
+  \end{codebox}
+  \label{alg:term}
+\end{algorithm}
+
+最终，我们可以将一个正则表达式分解为term
+或者term '|' regex的形式
+我们对相应NFA union 运算
+(\cref{alg:union})
+然后得到最终的NFA
+具体细节见%
+\cref{alg:regex}
+
+\begin{algorithm}[H]
+  \caption{regex 部分的解析}
+  \begin{codebox}
+    \Procname{regex()}
+      \li term $\gets$ term() \Comment 第一部分为term部分
+      \li \If pattern \kw{and} peek() $=$ '|':
+      \Then
+        \li regex $\gets$ regex() \Comment 下一部分是另一个正则表达式，用自身解析
+        \li \Return union(term,regex)
+      \End
+      \Else:
+      \Then
+        \li \Return term
+      \End
+  \end{codebox}
+  \label{alg:regex}
+\end{algorithm}
+
+\end{document}

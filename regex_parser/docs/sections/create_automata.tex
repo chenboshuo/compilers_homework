@@ -5,6 +5,7 @@
 \subsubsection{自动机的数据结构}
   自动机由元组$(\Sigma,S,S_0,F,f)$
   组成，其中
+  
   \begin{enumerate}
     \item $\Sigma$ 为字符的集合,空串$\epsilon \notin \Sigma$
     \item $S$为状态集合
@@ -69,7 +70,14 @@
     \label{alg:union}
   \end{algorithm}
 
-  % \cref{alg:star}
+  对于$s*$的形式，
+  表示$s$匹配一次或多次，
+  对自动机来说，
+  无条件地进入终态，
+  无条件返回初态，
+  如%
+  \cref{alg:star}
+  
   \begin{algorithm}[H]
     \caption{star运算}
     \begin{codebox}
