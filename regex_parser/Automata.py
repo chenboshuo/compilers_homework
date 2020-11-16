@@ -292,7 +292,7 @@ class Automata:
 
 if __name__ == "__main__":
     def figure_path(s):
-        return f"../docs/figures/{s}.pdf"
+        return f"../reports/regex_parser/figures/{s}.pdf"
 
     # basic test
     test = Automata(set('ab'))
@@ -303,7 +303,7 @@ if __name__ == "__main__":
     test.add_transition(1, 1, set('b'))
     print(test.transitions)
     print(test)
-    test.draw('../docs/figures/test_automata.pdf',seed=2) # 2
+    test.draw('../reports/regex_parser/figures/test_automata.pdf',seed=2) # 2
     """ output
     {1: {2: {'a', 'b'}, 1: {'b'}}}
     states: {1, 2}
@@ -330,7 +330,7 @@ if __name__ == "__main__":
 
     # test basic construct
     test1 = Automata.basic_construct(set(['a']))
-    test1.draw(save="../docs/figures/basic_a.pdf",seed=1)
+    test1.draw(save="../reports/regex_parser/figures/basic_a.pdf",seed=1)
     print(test1)
     """
     states: {1, 2}
@@ -343,7 +343,7 @@ if __name__ == "__main__":
     # test star operation
     test1 = Automata.star_operation(test1)
     print(test1)
-    test1.draw('../docs/figures/test_star.pdf',seed=1)
+    test1.draw('../reports/regex_parser/figures/test_star.pdf',seed=1)
     r"""output
         states: {1, 2}
         start state:    1

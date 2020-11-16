@@ -162,7 +162,7 @@ class RegexParser:
 
 if __name__ == "__main__":
     def figure_path(s):
-        return f"../docs/figures/{s}.pdf"
+        return f"../reports/regex_parser/figures/{s}.pdf"
     
     # test the cases of the only letter
     test1 = RegexParser("a")
