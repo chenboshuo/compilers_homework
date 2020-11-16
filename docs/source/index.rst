@@ -3,23 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to regex parser's documentation!
+Welcome to my compilers homework's documentation!
 ========================================
 
 Indices and tables
-==================
+-------------------------------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-reference
-=======================
-
-*  `Parsing regular expressions with recursive descent <http://matt.might.net/articles/parsing-regex-with-recursive-descent/>`_
-*  `learn regex--the easy way <https://github.com/ziishaned/learn-regex>`_
-*  `automata-from-regex <https://github.com/sdht0/automata-from-regex>`_
 
 
 .. toctree::
@@ -27,3 +19,4 @@ reference
    :caption: Contents:
 
    regex_parser
+   reference

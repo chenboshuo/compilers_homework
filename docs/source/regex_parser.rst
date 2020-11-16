@@ -9,25 +9,23 @@ Regex Parser
    :caption: Contents:
 
 
-
-
-Automata
-============
+Automata class
+-------------------
  .. autoclass:: Automata.Automata
    :members:
 
  .. raw:: latex
 
-     \section{Source Code}
-     \lstinputlisting{../../../src/Automata.py}
+     \subsection{Source Code}
+     \lstinputlisting{../../../regex_parser/Automata.py}
 
 
-RegexParser
-============
+RegexParser class
+-----------------
  .. autoclass:: RegexParser.RegexParser
    :members:
 
  .. raw:: latex
 
-     \section{Source Code}
-     \lstinputlisting{../../../src/RegexParser.py}
+     \subsection{Source Code}
+     \lstinputlisting{../../../regex_parser/RegexParser.py}
