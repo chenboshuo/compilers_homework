@@ -1,0 +1,44 @@
+\documentclass[pdfCover]{myreport} % 需要pdf封面
+% \documentclass{myreport}
+\title{测试myreport}
+\author{陈伯硕}
+\date{\today}
+
+
+\usepackage{subfiles}
+\begin{document}
+\maketitle
+\pagestyle{empty}
+% Generate the Table of Contents if it's needed.
+% \tableofcontents
+% \newpage
+
+\setcounter{section}{3}
+\section{算法设计}
+\subsection{subsection}
+\subsubsection{subsection}
+
+\section{实验步骤与结果}
+
+\section{实验总结}
+  \subfile{sections/opinion}
+
+
+\nocite{alfred_v_aho_compilers_2006}
+\bibliography{reference}
+
+
+\begin{appendices}
+  \section{依赖的安装}
+    本文代码的依赖如下
+    \lstinputlisting{../../ll1_parser/requirements.txt}
+    可以通过以下命令在清华镜像网站安装全部
+    \begin{lstlisting}
+    pip install -i http://mirrors.aliyun.com/pypi/simple \
+    --trusted-host mirrors.aliyun.com/pypi/simple/ \
+    -r requirements.txt
+    \end{lstlisting}
+
+    % \lstinputlisting[language=python]{../../regex_parser/Automata.py}
+\end{appendices}
+\end{document}
