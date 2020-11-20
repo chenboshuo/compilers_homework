@@ -14,6 +14,7 @@ import os
 import sys
 import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('../../regex_parser'))
+sys.path.insert(0, os.path.abspath('../../ll1_parser'))
 
 
 # -- Project information -----------------------------------------------------
@@ -35,7 +36,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.imgmath' ,
     'sphinx.ext.viewcode',
-    "sphinx_rtd_theme"
+    "sphinx_rtd_theme",
+    "sphinx.ext.doctest" 
 ]
 
 # Add any paths that contain templates here, relative to this directory.

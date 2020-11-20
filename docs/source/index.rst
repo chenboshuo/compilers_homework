@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to my compilers homework's documentation!
-========================================
+=====================================================
 
 Indices and tables
 -------------------------------------------
@@ -19,4 +19,5 @@ Indices and tables
    :caption: Contents:
 
    regex_parser
+   ll1_parser
    reference
