@@ -51,20 +51,26 @@ class LL1Parser:
             for alternative in alternatives[1:]:
                 self.rules[left].append([alternative])
     
-    def display(self):
-        """desplay the grammer
+    def display(self,raw=False):
+        """display  the latex code of the gammer
+
+        :param raw: show the raw code, defaults to False
+        :type raw: bool, optional
         """
         begin = r"\begin{array}{l}" + "\n"
         end = r"\end{array}"
         
         for left,rules in self.rules.items(): 
-            s = left + r" &\to "
+            s = "\t"+left + r" & \to "
             s += " ".join(rules[0])
-            s += r"\\" + "\n"
+            s += r" \\" + "\n"
             for r in rules[1:]:
-                s+= r"&\;\, |\;\," + " ".join(r) + r"\\" 
+                s+= "\t\t" + r"&\;\, |\;\," + " ".join(r) + r"\\" + "\n"
             begin += s
         
+        if raw:
+            print(begin+end)
+
         display(Math(begin+end))
         
 

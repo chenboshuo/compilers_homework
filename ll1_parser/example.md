@@ -49,7 +49,7 @@ grammer.rules
 ```
 
 ```python
-grammer.display()
+grammer.display(raw=True)
 ```
 
 ```python

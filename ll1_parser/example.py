@@ -36,6 +36,6 @@ grammer = LL1Parser(g)
 
 grammer.rules
 
-grammer.display()
+grammer.display(raw=True)
 
 
