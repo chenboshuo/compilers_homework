@@ -1,0 +1,48 @@
+\documentclass[../report]{subfiles}
+\graphicspath{{figures/}{../figures/}}
+
+% \renewcommand{\Comment}{$\hspace*{-0.075em}\rhd$ }
+\begin{document}
+首先测试文法的输入与保存，
+对于以下文法
+\begin{equation}
+  \begin{array}{ll}
+		E & \to T E' \\
+		E' & \to + T E |\, \epsilon \\
+		T & \to F T \\
+		T' & \to *F T' |\, \epsilon \\
+		F & \to ( E ) |\, \textbf{id}\\
+  \end{array}
+  \label{eq:test}
+\end{equation}
+
+在python中导入写好的库，
+调用
+\begin{lstlisting}[language=python]
+from LL1Parser import LL1Parser
+g = [r"E \to T E'",
+     r"E' \to + T E | \epsilon ",
+     r"T \to F T",
+     r"T' \to *F T' | \epsilon ",
+     r"F \to ( E ) | \textbf{id}"]
+grammer.display(raw=True)
+\end{lstlisting}
+文法的输入需要遵守 \LaTeX 语法并保证符号之间用空格隔开，
+$\epsilon$ 表示空串，
+一组非终结符需要加粗
+
+输出文法(\ref{eq:test})的源代码和渲染结果
+\begin{lstlisting}
+\begin{array}{l}
+	E & \to T E' \\
+	E' & \to + T E \\
+		&\;\, |\;\, \epsilon \\
+	T & \to F T \\
+	T' & \to *F T' \\
+		&\;\, |\;\, \epsilon \\
+	F & \to ( E ) \\
+		&\;\, |\;\, \textbf{id}\\
+\end{array}
+\end{lstlisting}
+
+\end{document}

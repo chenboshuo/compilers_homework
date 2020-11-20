@@ -57,8 +57,8 @@ class LL1Parser:
         :param raw: show the raw code, defaults to False
         :type raw: bool, optional
         """
-        begin = r"\begin{array}{l}" + "\n"
-        end = r"\end{array}"
+        begin = r"\begin{array}{ll}" + "\n"
+        end = r"\end{array}"+"\n"
         
         for left,rules in self.rules.items(): 
             s = "\t"+left + r" & \to "
