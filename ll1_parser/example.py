@@ -18,9 +18,9 @@
 from IPython.display import display, Math, Latex 
 
 g = [r"E \to T E'", 
-     r"E' \to + T E | \epsilon ", 
+     r"E' \to + T E' | \epsilon ", 
      r"T \to F T", 
-     r"T' \to *F T' | \epsilon ",
+     r"T' \to * F T' | \epsilon ",
      r"F \to ( E ) | \textbf{id}"]
 
 for item in g:
@@ -36,6 +36,12 @@ grammer = LL1Parser(g)
 
 grammer.rules
 
-grammer.display(raw=True)
+grammer.display_rules(raw=True)
+
+grammer.create_first()
+
+grammer.first
+
+grammer.display_first_sets()
 
 

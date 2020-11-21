@@ -21,9 +21,9 @@ from IPython.display import display, Math, Latex
 
 ```python
 g = [r"E \to T E'", 
-     r"E' \to + T E | \epsilon ", 
+     r"E' \to + T E' | \epsilon ", 
      r"T \to F T", 
-     r"T' \to *F T' | \epsilon ",
+     r"T' \to * F T' | \epsilon ",
      r"F \to ( E ) | \textbf{id}"]
 ```
 
@@ -49,7 +49,19 @@ grammer.rules
 ```
 
 ```python
-grammer.display(raw=True)
+grammer.display_rules(raw=True)
+```
+
+```python
+grammer.create_first()
+```
+
+```python
+grammer.first
+```
+
+```python
+grammer.display_first_sets()
 ```
 
 ```python
