@@ -37,7 +37,9 @@ extensions = [
     'sphinx.ext.imgmath' ,
     'sphinx.ext.viewcode',
     "sphinx_rtd_theme",
-    "sphinx.ext.doctest" 
+    "sphinx.ext.doctest",
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -102,3 +104,9 @@ import mock
 MOCK_MODULES = ['matplotlib', 'matplotlib.pyplot']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
+
+
+autodoc_default_options = {
+    'members':         True,
+    'member-order':    'bysource',
+}

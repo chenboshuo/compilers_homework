@@ -5,51 +5,59 @@ from IPython.display import display, Math, Latex
 
 class LL1Parser:
     r"""a set of algorithms to analyse the LL(1) grammer
+    
         :param rules: the LL(1) grammer,you need input using latex gammer and 
-        sparated by spaces.
+            sparated by spaces.
 
-        for instance, in you want to input:
+            for instance, in you want to input:
             
-        :math:`E \to T E`
+            :math:`E \to T E`
 
-        :math:`E' \to + T E | \epsilon`
+            :math:`E' \to + T E | \epsilon`
 
-        :math:`T \to F T`
+            :math:`T \to F T`
 
-        :math:`T' \to *F T' | \epsilon`
+            :math:`T' \to *F T' | \epsilon`
 
-        :math:`F \to ( E ) | \textbf{id}`
+            :math:`F \to ( E ) | \textbf{id}`
 
-        then run:
-        
-        .. ipython:: python
+            then run:
+            
+            .. ipython:: python
 
-            from LL1Parser import LL1Parser            
-            g = [r"E \to T E'", 
-                r"E' \to + T E | \epsilon ", 
-                r"T \to F T", 
-                r"T' \to *F T' | \epsilon ",
-                r"F \to ( E ) | \textbf{id}"]     
-            grammer = LL1Parser(g)
-
-        To show the grammer you can call :meth:`LL1Parser.display_rules`
+                from LL1Parser import LL1Parser            
+                g = [r"E \to T E'", 
+                    r"E' \to + T E | \epsilon ", 
+                    r"T \to F T", 
+                    r"T' \to *F T' | \epsilon ",
+                    r"F \to ( E ) | \textbf{id}"]     
+                grammer = LL1Parser(g)
 
         :type rules: List[str]
-        :ivar self.rules: the rules of the gammer, 
+        :param start_symbol: the start symbol
+        :type start_symbol: str, optional
+    """
+
+    def __init__(self,rules:List[str],start_symbol:str=None) -> None:
+        """init the LL(1) grammer
+        """
+        # set the start symbol
+        if start_symbol:
+            self.start_symbol = start_symbol #: the start symbol
+        else:
+            self.start_symbol = rules[0].split()[0]
+
+        # save rules
+        self.rules:Dict[str,List[str]] = defaultdict(list) 
+        """the rules of the gammer, 
             `self.rules[T] = L`, 
             `L[i]= items`, 
             `items[k] = symbol`,
             where `T` is a terminal, 
             `i` is the index of alternatives
-            `items` is the list of the symbols of a rule 
-        :vartype self.rules: Dict[str,List[str]]
-    """
-
-    def __init__(self,rules:List[str]) -> None:
-        """init the LL(1) grammer
+            `items` is the list of the symbols of a rule
         """
-        # save rules
-        self.rules = defaultdict(list)
+        
         for rule in rules:
             alternatives = re.split('\|',rule) # find rules connect by |          
             first_part = alternatives[0].split()
@@ -94,7 +102,10 @@ class LL1Parser:
         :vartype can_emptystring: set
         """
         nonterminals = deque()
-        self.first = defaultdict(set)
+        self.first:Dict[str,set] = defaultdict(set)
+        """the first symbol dicts
+        """
+
         can_emptystring = set()
         for left,rule in self.iter_rules():
             if rule[0] not in self.rules: # symbol rule[0] is terminal 
@@ -129,6 +140,11 @@ class LL1Parser:
                 yield (left,rule)
 
     def display_first_sets(self,raw=False):
+        """render the first(i) in jupyter notebook
+
+        :param raw: the raw code of latex, defaults to False
+        :type raw: bool, optional
+        """
         begin = r"\begin{array}{ll}" + "\n"
         end = r"\end{array}" + "\n"
         contents = begin
