@@ -19,7 +19,7 @@ from IPython.display import display, Math, Latex
 
 g = [r"E \to T E'", 
      r"E' \to + T E' | \epsilon ", 
-     r"T \to F T", 
+     r"T \to F T'", 
      r"T' \to * F T' | \epsilon ",
      r"F \to ( E ) | \textbf{id}"]
 
@@ -38,10 +38,12 @@ grammer.rules
 
 grammer.display_rules(raw=True)
 
-grammer.create_first()
-
-grammer.first
-
 grammer.display_first_sets()
+
+grammer.create_follow()
+
+grammer.display_follow_sets()
+
+grammer.contains_empty
 
 

@@ -30,7 +30,7 @@ class LL1Parser:
                 from LL1Parser import LL1Parser            
                 g = [r"E \to T E'", 
                     r"E' \to + T E | \epsilon ", 
-                    r"T \to F T", 
+                    r"T \to F T'", 
                     r"T' \to *F T' | \epsilon ",
                     r"F \to ( E ) | \textbf{id}"]     
                 grammer = LL1Parser(g)
@@ -219,7 +219,7 @@ class LL1Parser:
             then everything in `follow(A)` is in `follow(B)`
         """
 
-        self.follow[self.start_symbol].add(r'\$')
+        self.follow[self.start_symbol].add(r'\$') # add end symbol
         to_union = deque() # (A,B) such that set B is the subset of set A
         empty_symbol = set([r'\epsilon'])
         for left, rule in self.iter_rules():
@@ -229,9 +229,9 @@ class LL1Parser:
                 if cur in self.rules: # cur is nonterminal
                     if post in self.rules:  # post is nonterminal
                         self.follow[cur].update(self.first[post]-empty_symbol)
-                    elif post == r'\epsilon' or post in self.contains_empty:
+                    if post == r'\epsilon' or post in self.contains_empty:
                         to_union.append((cur,left)) # follow(cur) contains follow(left)
-                    else:
+                    if post not in self.rules and post != r'\epsilon':
                         self.follow[cur].add(post)
         to_union.append((None,None)) # add the terminal symbol
         has_enlarged = False

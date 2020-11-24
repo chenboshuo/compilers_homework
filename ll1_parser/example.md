@@ -22,7 +22,7 @@ from IPython.display import display, Math, Latex
 ```python
 g = [r"E \to T E'", 
      r"E' \to + T E' | \epsilon ", 
-     r"T \to F T", 
+     r"T \to F T'", 
      r"T' \to * F T' | \epsilon ",
      r"F \to ( E ) | \textbf{id}"]
 ```
@@ -53,15 +53,19 @@ grammer.display_rules(raw=True)
 ```
 
 ```python
-grammer.create_first()
-```
-
-```python
-grammer.first
-```
-
-```python
 grammer.display_first_sets()
+```
+
+```python
+grammer.create_follow()
+```
+
+```python
+grammer.display_follow_sets()
+```
+
+```python
+grammer.contains_empty
 ```
 
 ```python
