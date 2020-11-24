@@ -25,8 +25,8 @@ class LL1Parser:
 
             then run:
 
-            .. ipython:: python
-
+            .. jupyter-execute::
+                
                 from LL1Parser import LL1Parser            
                 g = [r"E \to T E'", 
                     r"E' \to + T E | \epsilon ", 
@@ -38,6 +38,21 @@ class LL1Parser:
         :type rules: List[str]
         :param start_symbol: the start symbol
         :type start_symbol: str, optional
+
+        then you can display the rules using `display_rules()`, for example:
+
+        .. jupyter-execute::
+
+            grammer.display_rules()
+
+        You can see the first sets and follow sets 
+        using `display_first_sets()`, for examples:
+
+        .. jupyter-execute::
+
+            grammer.display_first_sets()
+
+
     """
 
     def __init__(self, rules: List[str], start_symbol: str = None) -> None:
@@ -78,6 +93,12 @@ class LL1Parser:
         """the set of terminals that contains empty strings
         """
         self.create_first()
+
+        # create follow set
+        self.follow = defaultdict(set)
+        """the follow set of every nonterminal
+        """
+        self.create_follow()
 
     def display_rules(self, raw=False):
         """display  the latex code of the gammer
@@ -142,7 +163,7 @@ class LL1Parser:
             for rule in rules:
                 yield (left, rule)
 
-    def display_sets(self,raw=False,name:str):
+    def display_sets(self,name,raw=False):
         """display the sets
 
         :param names: the set names(first,follow)
@@ -171,7 +192,15 @@ class LL1Parser:
         :param raw: the raw code of latex, defaults to False
         :type raw: bool, optional
         """
-        display_sets(raw=raw,name='first')
+        self.display_sets(raw=raw,name='first')
+
+    def display_follow_sets(self, raw=False):
+        """render the follow(i) in jupyter notebook
+
+        :param raw: the raw code of LaTeX, defaults to False
+        :type raw: bool, optional
+        """
+        self.display_sets(raw=raw, name='follow')
 
     def create_follow(self):
         r"""create the follow sets of all nonterminals
@@ -190,9 +219,8 @@ class LL1Parser:
             then everything in `follow(A)` is in `follow(B)`
         """
 
-        self.follow = defaultdict(set)
         self.follow[self.start_symbol].add(r'\$')
-        subset = defaultdict(set)
+        to_union = deque() # (A,B) such that set B is the subset of set A
         empty_symbol = set([r'\epsilon'])
         for left, rule in self.iter_rules():
             for cur, post in \
@@ -201,6 +229,24 @@ class LL1Parser:
                 if cur in self.rules: # cur is nonterminal
                     if post in self.rules:  # post is nonterminal
                         self.follow[cur].update(self.first[post]-empty_symbol)
-                    if post == r'\epsilon' or post in self.contains_empty:
-                        subset[cur].add(left)
-        return subset
+                    elif post == r'\epsilon' or post in self.contains_empty:
+                        to_union.append((cur,left)) # follow(cur) contains follow(left)
+                    else:
+                        self.follow[cur].add(post)
+        to_union.append((None,None)) # add the terminal symbol
+        has_enlarged = False
+        while to_union:
+            tail,left = to_union.popleft()
+            if left is None:
+                if not has_enlarged:
+                    break
+                else:
+                    has_enlarged = False
+                    to_union.append((None,None))
+            else:
+                set_, subset = self.follow[tail], self.follow[left] 
+                new_set = set_.union(subset)
+                if set_ != new_set:
+                    has_enlarged = True
+                    self.follow[tail] = new_set
+                to_union.append((tail,left))
