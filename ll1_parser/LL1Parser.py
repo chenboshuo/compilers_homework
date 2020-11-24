@@ -142,17 +142,19 @@ class LL1Parser:
             for rule in rules:
                 yield (left, rule)
 
-    def display_first_sets(self, raw=False):
-        """render the first(i) in jupyter notebook
+    def display_sets(self,raw=False,name:str):
+        """display the sets
 
-        :param raw: the raw code of latex, defaults to False
+        :param names: the set names(first,follow)
+        :type name: str
+        :param raw: show the raw latex code, defaults to False
         :type raw: bool, optional
         """
         begin = r"\begin{array}{ll}" + "\n"
         end = r"\end{array}" + "\n"
         contents = begin
-        for left, first_set in self.first.items():
-            s = r"\mathrm{first}(" + left + r") &= \{"
+        for left, first_set in self.__dict__[name].items():
+            s = r"\mathrm{"+ name + r"}(" + left + r") &= \{"
             s += ", ".join(list(first_set))
             s += r"\} \\"
             contents += s
@@ -161,6 +163,15 @@ class LL1Parser:
             print(contents)
 
         display(Math(contents))
+
+
+    def display_first_sets(self, raw=False):
+        """render the first(i) in jupyter notebook
+
+        :param raw: the raw code of latex, defaults to False
+        :type raw: bool, optional
+        """
+        display_sets(raw=raw,name='first')
 
     def create_follow(self):
         r"""create the follow sets of all nonterminals
