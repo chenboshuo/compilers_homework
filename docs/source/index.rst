@@ -19,5 +19,5 @@ Indices and tables
    :caption: Contents:
 
    regex_parser
-   ll1_parser
+   ll1_parser/api
    reference
