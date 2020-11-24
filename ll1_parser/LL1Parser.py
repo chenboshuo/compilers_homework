@@ -65,8 +65,8 @@ class LL1Parser:
             self.rules[left].append(first_part[2:]) # add elements except left symbol and ->
 
             for alternative in alternatives[1:]:
-                self.rules[left].append([alternative])
-        
+                self.rules[left].append(alternative.split())
+
         # create first
         self.create_first()
     
