@@ -26,7 +26,7 @@ class LL1Parser:
             then run:
 
             .. jupyter-execute::
-                
+
                 from LL1Parser import LL1Parser            
                 g = [r"E \to T E'", 
                     r"E' \to + T E | \epsilon ", 
@@ -110,17 +110,51 @@ class LL1Parser:
         end = r"\end{array}"+"\n"
 
         for left, rules in self.rules.items():
-            s = "\t"+left + r" & \to "
-            s += " ".join(rules[0])
-            s += r" \\" + "\n"
+            s = self.display_rule(left, rules[0])
             for r in rules[1:]:
-                s += "\t\t" + r"&\;\, |\;\," + " ".join(r) + r"\\" + "\n"
+                s += self.display_rule(left, rule=r, is_alternative=True)
             begin += s
 
         if raw:
             print(begin+end)
 
         display(Math(begin+end))
+
+    def display_rule(self, left: str,
+                     rule: List[str], new_line=True,
+                     array_environment=True,
+                     is_alternative=False) -> str:
+        """display a rule
+
+        :param left: left symbol
+        :type left: str
+        :param rule: the list of the rule
+        :type rule: List[str]
+        :param new_line: whether need a new line at the end, defaults to True
+        :type new_line: bool, optional
+        :param array_environment: whether the expression in array environment
+        :type array_environment: bool
+        :param is_alternative: whether the rule is the alternative, defaults to False
+        :type is_alternative: bool, optional
+        :return: the latex string of the rule
+        :rtype: str
+        """
+        if not is_alternative:  # need left symbol
+            s = "\t"+left
+            if array_environment:
+                s += r" & "  # TODO handle the & symbol
+            s += r" \to "
+        else:
+            s = "\t\t"
+            if array_environment:
+                s += r"&"
+            s += r"\;\, |\;\,"
+
+        s += " ".join(rule)
+        if new_line:
+            s += r" \\" + "\n"
+
+        return s
 
     def create_first(self):
         """create the first sets
@@ -163,7 +197,7 @@ class LL1Parser:
             for rule in rules:
                 yield (left, rule)
 
-    def display_sets(self,name,raw=False):
+    def display_sets(self, name, raw=False):
         """display the sets
 
         :param names: the set names(first,follow)
@@ -175,7 +209,7 @@ class LL1Parser:
         end = r"\end{array}" + "\n"
         contents = begin
         for left, first_set in self.__dict__[name].items():
-            s = r"\mathrm{"+ name + r"}(" + left + r") &= \{"
+            s = r"\mathrm{" + name + r"}(" + left + r") &= \{"
             s += ", ".join(list(first_set))
             s += r"\} \\"
             contents += s
@@ -185,14 +219,13 @@ class LL1Parser:
 
         display(Math(contents))
 
-
     def display_first_sets(self, raw=False):
         """render the first(i) in jupyter notebook
 
         :param raw: the raw code of latex, defaults to False
         :type raw: bool, optional
         """
-        self.display_sets(raw=raw,name='first')
+        self.display_sets(raw=raw, name='first')
 
     def display_follow_sets(self, raw=False):
         """render the follow(i) in jupyter notebook
@@ -219,34 +252,35 @@ class LL1Parser:
             then everything in `follow(A)` is in `follow(B)`
         """
 
-        self.follow[self.start_symbol].add(r'\$') # add end symbol
-        to_union = deque() # (A,B) such that set B is the subset of set A
+        self.follow[self.start_symbol].add(r'\$')  # add end symbol
+        to_union = deque()  # (A,B) such that set B is the subset of set A
         empty_symbol = set([r'\epsilon'])
         for left, rule in self.iter_rules():
             for cur, post in \
                 itertools.zip_longest(rule, rule[1:],
                                       fillvalue=r'\epsilon'):
-                if cur in self.rules: # cur is nonterminal
+                if cur in self.rules:  # cur is nonterminal
                     if post in self.rules:  # post is nonterminal
                         self.follow[cur].update(self.first[post]-empty_symbol)
                     if post == r'\epsilon' or post in self.contains_empty:
-                        to_union.append((cur,left)) # follow(cur) contains follow(left)
+                        # follow(cur) contains follow(left)
+                        to_union.append((cur, left))
                     if post not in self.rules and post != r'\epsilon':
                         self.follow[cur].add(post)
-        to_union.append((None,None)) # add the terminal symbol
+        to_union.append((None, None))  # add the terminal symbol
         has_enlarged = False
         while to_union:
-            tail,left = to_union.popleft()
+            tail, left = to_union.popleft()
             if left is None:
                 if not has_enlarged:
                     break
                 else:
                     has_enlarged = False
-                    to_union.append((None,None))
+                    to_union.append((None, None))
             else:
-                set_, subset = self.follow[tail], self.follow[left] 
+                set_, subset = self.follow[tail], self.follow[left]
                 new_set = set_.union(subset)
                 if set_ != new_set:
                     has_enlarged = True
                     self.follow[tail] = new_set
-                to_union.append((tail,left))
+                to_union.append((tail, left))
