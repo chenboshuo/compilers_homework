@@ -321,8 +321,12 @@ class LL1Parser:
             that means the grammer isn't LL(1) grammer
         """
 
-        if terminal in self.parsing_table[left]:
-            raise RuntimeError("It isn't a LL(1) grammer")
+        if terminal in self.parsing_table[left] and rule != self.parsing_table[left][terminal]:
+            raise RuntimeError(f"""It isn't a LL(1) grammer,
+            new added M[{left}][{terminal}] = {rule}
+            conflict with existing M[{left}][{terminal}] = {self.parsing_table[left][terminal]}
+            parsing ,
+            """)
         self.parsing_table[left][terminal] = rule
 
     def create_table(self):
@@ -345,13 +349,13 @@ class LL1Parser:
                 self.add_to_table(left,
                                   terminal=rule[0], rule=rule)
             elif rule[0] in self.contains_empty:  # epsilon is in first symbol
-                for i in self.follow[rule[0]]:  # every symbol should add to table
+                for i in self.follow[left]:  # every symbol should add to table
                     self.add_to_table(left=left,
-                                      terminal=i, rule=rule)
-                if r'\$' in self.follow[rule[0]]:
+                                    terminal=i, rule=rule)
+                if r'\$' in self.follow[left]:
                     self.add_to_table(left=left,
-                                      terminal=r'\$', rule=rule)
-            else: # first symbol is nonterminal
+                                    terminal=r'\$', rule=rule)
+            if rule[0] in self.rules: # first symbol is nonterminal
                 for terminal in self.first[left]:
                     self.add_to_table(left=left, terminal=terminal,rule=rule)
         # def a(self):
