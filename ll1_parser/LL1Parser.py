@@ -321,7 +321,7 @@ class LL1Parser:
             that means the grammer isn't LL(1) grammer
         """
 
-        if rule[0] in self.parsing_table[left]:
+        if terminal in self.parsing_table[left]:
             raise RuntimeError("It isn't a LL(1) grammer")
         self.parsing_table[left][terminal] = rule
 
