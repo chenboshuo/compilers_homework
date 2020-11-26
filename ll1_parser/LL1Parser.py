@@ -63,7 +63,6 @@ class LL1Parser:
             self.start_symbol = start_symbol  # : the start symbol
         else:
             self.start_symbol = rules[0].split()[0]
-
         # save rules
         self.rules: Dict[str, List[str]] = defaultdict(list)
         """the rules of the gammer, 
@@ -74,6 +73,12 @@ class LL1Parser:
             `i` is the index of alternatives
             `items` is the list of the symbols of a rule
         """
+        
+        self.terminals: set = set()
+        """
+        The list of terminals in table parsing table
+        (include $, not include :math:`\epsilon`)
+        """
 
         for rule in rules:
             alternatives = re.split('\|', rule)  # find rules connect by |
@@ -81,15 +86,21 @@ class LL1Parser:
             left = first_part[0]  # the nonterminal can find in the first part
             # add elements except left symbol and ->
             self.rules[left].append(first_part[2:])
+            self.terminals.update(first_part[2:])
 
             for alternative in alternatives[1:]:
-                self.rules[left].append(alternative.split())
+                alternative_symbols = alternative.split()
+                self.rules[left].append(alternative_symbols)
+                self.terminals.update(alternative_symbols)
+            
+            self.terminals = self.terminals - set(self.rules.keys()) - set([r'\epsilon'])
+            self.terminals.update([r'\$'])
 
         # create first
         self.first: Dict[str, set] = defaultdict(set)
         """the first symbol dicts
         """
-        self.contains_empty: set = set()
+        self.contains_empty: set = set([r'\epsilon'])
         """the set of terminals that contains empty strings
         """
         self.create_first()
@@ -99,13 +110,7 @@ class LL1Parser:
         """the follow set of every nonterminal
         """
         self.create_follow()
-
-        # create parsing table
-        self.terminals: set = set()
-        """
-        The list of terminals in table parsing table
-        (include $, not include :math:`\epsilon`)
-        """
+        
         self.parsing_table: Dict[str, Dict[str, List[str]]] \
             = defaultdict(dict)
         """ the parsing table
@@ -113,6 +118,8 @@ class LL1Parser:
         where A is the nonterminal at the left of rule,
         a is the nonterminal
         """
+
+        # create parsing table
         self.create_table()
 
     def display_rules(self, raw=False):
@@ -277,7 +284,7 @@ class LL1Parser:
                 if cur in self.rules:  # cur is nonterminal
                     if post in self.rules:  # post is nonterminal
                         self.follow[cur].update(self.first[post]-empty_symbol)
-                    if post == r'\epsilon' or post in self.contains_empty:
+                    if post in self.contains_empty:
                         # follow(cur) contains follow(left)
                         to_union.append((cur, left))
                     if post not in self.rules and post != r'\epsilon':
@@ -317,7 +324,6 @@ class LL1Parser:
         if rule[0] in self.parsing_table[left]:
             raise RuntimeError("It isn't a LL(1) grammer")
         self.parsing_table[left][terminal] = rule
-        self.terminals.add(terminal)
 
     def create_table(self):
         r"""create a predictive parsing table
@@ -335,7 +341,7 @@ class LL1Parser:
         add :math:`A \to \alpha` to M[A,$] as well.
         """
         for left, rule in self.iter_rules():
-            if rule[0] not in self.rules:
+            if rule[0] in self.terminals:
                 self.add_to_table(left,
                                   terminal=rule[0], rule=rule)
             elif rule[0] in self.contains_empty:  # epsilon is in first symbol
@@ -345,7 +351,9 @@ class LL1Parser:
                 if r'\$' in self.follow[rule[0]]:
                     self.add_to_table(left=left,
                                       terminal=r'\$', rule=rule)
-
+            else: # first symbol is nonterminal
+                for terminal in self.first[left]:
+                    self.add_to_table(left=left, terminal=terminal,rule=rule)
         # def a(self):
         #     """[summary]
 
