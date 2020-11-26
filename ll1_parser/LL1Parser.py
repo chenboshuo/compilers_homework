@@ -345,26 +345,36 @@ class LL1Parser:
         add :math:`A \to \alpha` to M[A,$] as well.
         """
         for left, rule in self.iter_rules():
-            if rule[0] in self.terminals:
-                self.add_to_table(left,
-                                  terminal=rule[0], rule=rule)
-            elif rule[0] in self.contains_empty:  # epsilon is in first symbol
+            first = self.get_first(rule)
+            for terminal in first:
+                self.add_to_table(left=left, terminal=terminal,rule=rule)
+            if r'\epsilon' in first:  # epsilon is in first symbol
                 for i in self.follow[left]:  # every symbol should add to table
                     self.add_to_table(left=left,
                                     terminal=i, rule=rule)
                 if r'\$' in self.follow[left]:
                     self.add_to_table(left=left,
                                     terminal=r'\$', rule=rule)
-            if rule[0] in self.rules: # first symbol is nonterminal
-                for terminal in self.first[left]:
-                    self.add_to_table(left=left, terminal=terminal,rule=rule)
-        # def a(self):
-        #     """[summary]
 
-        #     :raises RuntimeError: [description]
-        #     """
+    def get_first(self,rule:List[str]) -> set:
+        r"""return the first symbol of a expression(calculate first(:math:`\alpha`))
 
-        #     raise RuntimeError("1")
+        :param rule: the list of rule symbols
+        :type rule: List[str]
+        :return: the set of the first set
+        :rtype: set
+        """
+        if rule[0] in self.terminals:
+            return set([rule[0]])
+        if rule[0] == r'\epsilon':
+            return set([r'\epsilon'])
+        first_set = self.first[rule[0]]
+        first_part = self.first[rule[0]]
+        while r'\epsilon' in first_part:
+            first_part = self.get_first(rule[1:])
+            first_set.update(first_part)
+
+        return first_set
 
     def display_parsing_table(self, raw=False):
         begin = r"\begin{array}{|"
@@ -384,7 +394,6 @@ class LL1Parser:
             for terminal in self.terminals:
                 line += " \t&"
                 if terminal in self.parsing_table[nonterminal]:
-                    # print(nonterminal,terminal)
                     line += self.display_rule(left=nonterminal,
                                               rule=self.parsing_table[nonterminal][terminal],
                                               new_line=False,
