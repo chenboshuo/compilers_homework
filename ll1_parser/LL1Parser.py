@@ -100,6 +100,21 @@ class LL1Parser:
         """
         self.create_follow()
 
+        # create parsing table
+        self.terminals: set = set()
+        """
+        The list of terminals in table parsing table
+        (include $, not include :math:`\epsilon`)
+        """
+        self.parsing_table: Dict[str, Dict[str, List[str]]] \
+            = defaultdict(dict)
+        """ the parsing table
+        self.parsing_table[A][a] = (rule)
+        where A is the nonterminal at the left of rule,
+        a is the nonterminal
+        """
+        self.create_table()
+
     def display_rules(self, raw=False):
         """display  the latex code of the gammer
 
@@ -284,3 +299,90 @@ class LL1Parser:
                     has_enlarged = True
                     self.follow[tail] = new_set
                 to_union.append((tail, left))
+
+    def add_to_table(self, left: str, terminal: str,
+                     rule: List[str]):
+        """add the rule to the predictive parsing table
+
+        :param left: the left of the production
+        :type left: str
+        :param terminal: the related terminal
+        :type terminal: str
+        :param rule: the rule of the right
+        :type rule: List[str]
+        :raises RuntimeError: conflict in add items,
+            that means the grammer isn't LL(1) grammer
+        """
+
+        if rule[0] in self.parsing_table[left]:
+            raise RuntimeError("It isn't a LL(1) grammer")
+        self.parsing_table[left][terminal] = rule
+        self.terminals.add(terminal)
+
+    def create_table(self):
+        r"""create a predictive parsing table
+        For each production :math:`A \to \alpha` of the grammar, 
+        do the following:
+
+        1. For each terminal :math:`a`, add :math:`A \to \alpha` 
+        to `M[A,a]`.
+
+        2. If :math:`\epsilon` in first(:math:`\alpha`),
+        then for each terminal b in follow(A),
+        add :math:`A \to \alpha` to `M[A,b]`.
+        If :math:`\epsilon` in first(:math:`\alpha`)
+        and $ in follow(A),
+        add :math:`A \to \alpha` to M[A,$] as well.
+        """
+        for left, rule in self.iter_rules():
+            if rule[0] not in self.rules:
+                self.add_to_table(left,
+                                  terminal=rule[0], rule=rule)
+            elif rule[0] in self.contains_empty:  # epsilon is in first symbol
+                for i in self.follow[rule[0]]:  # every symbol should add to table
+                    self.add_to_table(left=left,
+                                      terminal=i, rule=rule)
+                if r'\$' in self.follow[rule[0]]:
+                    self.add_to_table(left=left,
+                                      terminal=r'\$', rule=rule)
+
+        # def a(self):
+        #     """[summary]
+
+        #     :raises RuntimeError: [description]
+        #     """
+
+        #     raise RuntimeError("1")
+
+    def display_parsing_table(self, raw=False):
+        begin = r"\begin{array}{|"
+        begin += r"|".join(["c"]*(len(self.terminals)+1))
+        begin += r"|}" + '\n'
+        end = r"\end{array}"
+
+        # create the header
+        header = "\hline \n" + r"\text{terminal}"
+        for terminal in self.terminals:
+            header += "\t&"
+            header += terminal
+        header += r'\\ \hline' + "\n"
+        cells = ""
+        for nonterminal in self.rules.keys():
+            line = "\t" + nonterminal
+            for terminal in self.terminals:
+                line += " \t&"
+                if terminal in self.parsing_table[nonterminal]:
+                    # print(nonterminal,terminal)
+                    line += self.display_rule(left=nonterminal,
+                                              rule=self.parsing_table[nonterminal][terminal],
+                                              new_line=False,
+                                              array_environment=False)
+            # line += r"\\ \hline" + '\n'
+            line += r"\\ " + '\n'
+            cells += line
+        
+        cells += r"\hline" + "\n"
+        content = begin+header + cells + end
+        display(Math(content))
+        if raw:
+            print(content)
