@@ -1,5 +1,4 @@
 from collections import defaultdict, deque
-import re
 from typing import *
 from IPython.display import display, Math, Latex
 import itertools
@@ -95,7 +94,7 @@ class LL1Parser:
         """
 
         for rule in rules:
-            alternatives = re.split('\|', rule)  # find rules connect by |
+            alternatives = rule.split('|')  # find rules connect by |
             first_part = alternatives[0].split()
             left = first_part[0]  # the nonterminal can find in the first part
             # add elements except left symbol and ->
