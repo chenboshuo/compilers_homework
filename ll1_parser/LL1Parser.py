@@ -64,8 +64,6 @@ class LL1Parser:
 
             grammer.display_parsing_table()
 
-
-
     """
 
     def __init__(self, rules: List[str], start_symbol: str = None) -> None:
@@ -86,7 +84,7 @@ class LL1Parser:
             `i` is the index of alternatives
             `items` is the list of the symbols of a rule
         """
-        
+
         self.terminals: set = set()
         """
         The list of terminals in table parsing table
@@ -105,8 +103,9 @@ class LL1Parser:
                 alternative_symbols = alternative.split()
                 self.rules[left].append(alternative_symbols)
                 self.terminals.update(alternative_symbols)
-            
-            self.terminals = self.terminals - set(self.rules.keys()) - set([r'\epsilon'])
+
+            self.terminals = self.terminals - \
+                set(self.rules.keys()) - set([r'\epsilon'])
             self.terminals.update([r'\$'])
 
         # create first
@@ -123,7 +122,7 @@ class LL1Parser:
         """the follow set of every nonterminal
         """
         self.create_follow()
-        
+
         self.parsing_table: Dict[str, Dict[str, List[str]]] \
             = defaultdict(dict)
         """ the parsing table
@@ -203,11 +202,11 @@ class LL1Parser:
         nonterminals = deque()
 
         for left, rule in self.iter_rules():
-            if rule[0] not in self.rules:  # symbol rule[0] is terminal
+            if rule[0] in self.terminals:  # symbol rule[0] is terminal
                 self.first[left].add(rule[0])
-                if rule[0] == r'\epsilon':
-                    self.contains_empty.add(left)
-            else:
+            elif rule[0] == r'\epsilon':
+                self.contains_empty.add(left)
+            else: # rule[0] is nonterminal
                 nonterminals.append((left, rule))
 
         while nonterminals:
@@ -378,16 +377,16 @@ class LL1Parser:
         for left, rule in self.iter_rules():
             first = self.get_first(rule)
             for terminal in first:
-                self.add_to_table(left=left, terminal=terminal,rule=rule)
+                self.add_to_table(left=left, terminal=terminal, rule=rule)
             if r'\epsilon' in first:  # epsilon is in first symbol
                 for i in self.follow[left]:  # every symbol should add to table
                     self.add_to_table(left=left,
-                                    terminal=i, rule=rule)
+                                      terminal=i, rule=rule)
                 if r'\$' in self.follow[left]:
                     self.add_to_table(left=left,
-                                    terminal=r'\$', rule=rule)
+                                      terminal=r'\$', rule=rule)
 
-    def get_first(self,rule:List[str]) -> set:
+    def get_first(self, rule: List[str]) -> set:
         r"""return the first symbol of a expression(calculate first(:math:`\alpha`))
 
         :param rule: the list of rule symbols
@@ -432,7 +431,7 @@ class LL1Parser:
             # line += r"\\ \hline" + '\n'
             line += r"\\ " + '\n'
             cells += line
-        
+
         cells += r"\hline" + "\n"
         content = begin+header + cells + end
         display(Math(content))
