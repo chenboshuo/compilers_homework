@@ -13,6 +13,9 @@ jupyter:
     name: ~ython3
 ---
 
+# test a LL(1) grammar
+
+
 ## input a ll(1) grammar
 
 ```python
@@ -44,6 +47,8 @@ from LL1Parser import LL1Parser
 grammer = LL1Parser(g)
 ```
 
+## store and display the rules
+
 ```python
 grammer.rules
 ```
@@ -52,22 +57,36 @@ grammer.rules
 grammer.display_rules(raw=True)
 ```
 
-```python
-grammer.display_first_sets()
-```
+## calculate and see the first,follow sets
 
 ```python
-grammer.create_follow()
+grammer.display_first_sets()
 ```
 
 ```python
 grammer.display_follow_sets()
 ```
 
+## create and display the parsing table
+
 ```python
-grammer.contains_empty
+grammer.parsing_table
 ```
 
 ```python
+grammer.display_parsing_table(raw=True)
+```
 
+# test a wrong grammer
+
+```python
+w = [r"S \to i E t S S' | a",
+    r"S' \to e S | \epsilon",
+    r"E \to b"]
+for g in w:
+    display(Math(g))
+```
+
+```python
+wrong = LL1Parser(w)
 ```

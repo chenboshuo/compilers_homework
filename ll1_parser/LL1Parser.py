@@ -29,10 +29,10 @@ class LL1Parser:
 
                 from LL1Parser import LL1Parser            
                 g = [r"E \to T E'", 
-                    r"E' \to + T E | \epsilon ", 
+                    r"E' \to + T E' | \epsilon ", 
                     r"T \to F T'", 
-                    r"T' \to *F T' | \epsilon ",
-                    r"F \to ( E ) | \textbf{id}"]     
+                    r"T' \to * F T' | \epsilon ",
+                    r"F \to ( E ) | \textbf{id}"]                    
                 grammer = LL1Parser(g)
 
         :type rules: List[str]
@@ -51,6 +51,20 @@ class LL1Parser:
         .. jupyter-execute::
 
             grammer.display_first_sets()
+
+        Similarly, you can see the follow set using:
+
+        .. jupyter-execute::
+
+            grammer.display_follow_sets()
+
+        The :meth:`LL1Parser.display_parsing_table`
+        can show the parsing table
+
+        .. jupyter-execute::
+
+            grammer.display_parsing_table()
+
 
 
     """
@@ -309,7 +323,7 @@ class LL1Parser:
 
     def add_to_table(self, left: str, terminal: str,
                      rule: List[str]):
-        """add the rule to the predictive parsing table
+        r"""add the rule to the predictive parsing table
 
         :param left: the left of the production
         :type left: str
@@ -318,7 +332,25 @@ class LL1Parser:
         :param rule: the rule of the right
         :type rule: List[str]
         :raises RuntimeError: conflict in add items,
-            that means the grammer isn't LL(1) grammer
+            that means the grammer isn't LL(1) grammer.
+            for example, if you have the grammer
+
+            .. jupyter-execute::
+
+                from IPython.display import display, Math, Latex 
+                w = [r"S \to i E t S S' | a",
+                    r"S' \to e S | \epsilon",
+                    r"E \to b"]
+                for g in w:
+                    display(Math(g))
+
+            then you create the instance,
+            you will see the information
+
+            .. jupyter-execute::
+                :raises:
+
+                wrong = LL1Parser(w)
         """
 
         if terminal in self.parsing_table[left] and rule != self.parsing_table[left][terminal]:

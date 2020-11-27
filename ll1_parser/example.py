@@ -13,6 +13,8 @@
 #     name: ~ython3
 # ---
 
+# # test a LL(1) grammar
+
 # ## input a ll(1) grammar
 
 from IPython.display import display, Math, Latex 
@@ -34,16 +36,30 @@ from LL1Parser import LL1Parser
 
 grammer = LL1Parser(g)
 
+# ## store and display the rules
+
 grammer.rules
 
 grammer.display_rules(raw=True)
 
-grammer.display_first_sets()
+# ## calculate and see the first,follow sets
 
-grammer.create_follow()
+grammer.display_first_sets()
 
 grammer.display_follow_sets()
 
-grammer.contains_empty
+# ## create and display the parsing table
 
+grammer.parsing_table
 
+grammer.display_parsing_table(raw=True)
+
+# # test a wrong grammer
+
+w = [r"S \to i E t S S' | a",
+    r"S' \to e S | \epsilon",
+    r"E \to b"]
+for g in w:
+    display(Math(g))
+
+wrong = LL1Parser(w)
