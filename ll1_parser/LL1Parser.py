@@ -352,10 +352,10 @@ class LL1Parser:
         """
 
         if terminal in self.parsing_table[left] and rule != self.parsing_table[left][terminal]:
-            raise RuntimeError(f"""It isn't a LL(1) grammer,
+            raise RuntimeError(f"""It isn't a LL(1) grammar,
             new added M[{left}][{terminal}] = {rule}
             conflict with existing M[{left}][{terminal}] = {self.parsing_table[left][terminal]}
-            parsing ,
+            parsing table.
             """)
         self.parsing_table[left][terminal] = rule
 
