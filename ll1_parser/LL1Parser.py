@@ -386,6 +386,8 @@ class LL1Parser:
                     self.add_to_table(left=left,
                                       terminal=r'\$', rule=rule)
 
+    # TODO calculate the first of production, and store them
+    # Then calculate tht first of nonterminal
     def get_first(self, rule: List[str]) -> set:
         r"""return the first symbol of a expression(calculate first(:math:`\alpha`))
 
