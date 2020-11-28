@@ -243,9 +243,9 @@ class LL1Parser:
         end = r"\end{array}" + "\n"
         contents = begin
         for left, first_set in self.__dict__[name].items():
-            s = r"\mathrm{" + name + r"}(" + left + r") &= \{"
+            s = "\t" + r"\mathrm{" + name + r"}(" + left + r") &= \{"
             s += ", ".join(list(first_set))
-            s += r"\} \\"
+            s += r"\} \\" + "\n"
             contents += s
         contents += end
         if raw:
@@ -394,10 +394,8 @@ class LL1Parser:
         :return: the set of the first set
         :rtype: set
         """
-        if rule[0] in self.terminals:
+        if rule[0] in self.terminals or rule[0] == r'\epsilon':
             return set([rule[0]])
-        if rule[0] == r'\epsilon':
-            return set([r'\epsilon'])
         first_set = self.first[rule[0]]
         first_part = self.first[rule[0]]
         while r'\epsilon' in first_part:
@@ -413,7 +411,7 @@ class LL1Parser:
         end = r"\end{array}"
 
         # create the header
-        header = "\hline \n" + r"\text{terminal}"
+        header = "\t\hline \n" + "\t" +r"\text{terminal}"
         for terminal in self.terminals:
             header += "\t&"
             header += terminal
