@@ -1,0 +1,27 @@
+\documentclass[../report]{subfiles}
+\graphicspath{{figures/}{../figures/}}
+
+% \renewcommand{\Comment}{$\hspace*{-0.075em}\rhd$ }
+\begin{document}
+接下来根据\cref{alg:creaete_table},
+得到文法(\ref{test})的文法分析表如%
+\cref{t:parsing_table}
+
+\begin{table}[H]
+  \caption{文法(\ref{test})语意分析表}
+  \label{t:parsing_table}
+  \[
+    \begin{array}{|c|c|c|c|c|c|c|}
+      \hline
+      \text{terminal}	&\textbf{id}	&\$	&*	&(	&+	&)\\ \hline
+        E 	&	E \to T E' 	& 	& 	&	E \to T E' 	& 	&\\
+        E' 	& 	&	E' \to \epsilon 	& 	& 	&	E' \to + T E' 	&	E' \to \epsilon\\
+        T 	&	T \to F T' 	& 	& 	&	T \to F T' 	& 	&\\ 
+        T' 	& 	&	T' \to \epsilon 	&	T' \to * F T' 	& 	&	T' \to \epsilon 	&	T' \to \epsilon\\
+        F 	&	F \to \textbf{id} 	& 	& 	&	F \to ( E ) 	& 	&\\
+      \hline
+    \end{array}
+  \]
+\end{table}
+
+\end{document}

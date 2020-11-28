@@ -1,0 +1,61 @@
+\documentclass[../report]{subfiles}
+\graphicspath{{figures/}{../figures/}}
+
+% \renewcommand{\Comment}{$\hspace*{-0.075em}\rhd$ }
+\begin{document}
+接下来我们约定:
+文法的输入需要遵守 \LaTeX 语法并保证符号之间用空格隔开，
+$\epsilon$ 表示空串，
+一组非终结符需要加粗。
+对于用户来说，这样的输入输出较为美观，
+对于程序来说， 可以直接根据空格拆分文法的每一个符号。
+
+根据输入约定，构造数据结构$\id{rules}$,
+可以通过Python字典实现，
+对于每一个字典项，
+用列表存储文法的条目，
+每个条目是一个列表，
+作为符号序列，
+即$\id{Dict[str,List[List[str]]]}$,
+该字典的键(key) 为非终结符集合，
+同时记录非终结符集合$\id{termials}$,
+便于接下来算法处理,
+也要记录开始符号，便于接下来使用
+
+例如，对于
+\begin{equation}
+  \begin{array}{ll}
+		E & \to T E' \\
+		E' & \to + T E |\, \epsilon \\
+		T & \to F T' \\
+		T' & \to *F T' |\, \epsilon \\
+		F & \to ( E ) |\, \textbf{id}\\
+  \end{array}
+  \label{eq:test}
+\end{equation}
+
+按照输入约定，输入一个列表$\id{g}$表示
+文法 (\ref{eq:test})
+\begin{lstlisting}[language=python]
+g = [r"E \to T E'",
+     r"E' \to + T E' | \epsilon ",
+     r"T \to F T'",
+     r"T' \to * F T' | \epsilon ",
+     r"F \to ( E ) | \textbf{id}"]
+\end{lstlisting}
+
+在python中存储结构如下
+\begin{lstlisting}[language=python]
+defaultdict(list,
+            {'E': [['T', "E'"]],
+             "E'": [['+', 'T', "E'"], ['\\epsilon']],
+             'T': [['F', "T'"]],
+             "T'": [['*', 'F', "T'"], ['\\epsilon']],
+             'F': [['(', 'E', ')'], ['\\textbf{id}']]})
+\end{lstlisting}
+
+
+更多详细的说明可以查阅本项目的API说明文档
+\url{https://compilers-homework.readthedocs.io/en/latest/ll1_parser/api/}
+
+\end{document}
