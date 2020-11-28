@@ -299,7 +299,7 @@ class LL1Parser:
                     if post in self.contains_empty:
                         # follow(cur) contains follow(left)
                         to_union.append((cur, left))
-                    if post not in self.rules and post != r'\epsilon':
+                    elif post in self.terminals:
                         self.follow[cur].add(post)
         to_union.append((None, None))  # add the terminal symbol
         has_enlarged = False
