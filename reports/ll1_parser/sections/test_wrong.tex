@@ -1,0 +1,27 @@
+\documentclass[../report]{subfiles}
+\graphicspath{{figures/}{../figures/}}
+
+\begin{document}
+下面测试非LL(1)文法\ref{eq:wrong}
+
+\begin{equation}
+  \begin{array}{ll}
+  	S &  \to i E t S S' \\
+  		&\;\, |\;\,a \\
+  	S' &  \to e S \\
+  		&\;\, |\;\,\epsilon \\
+  	E &  \to b \\
+  \end{array}
+  \label{eq:wrong}
+\end{equation}
+
+非LL(1)文法在将语法添加到语法分析表的时候会报错，
+此时抛出异常如下
+\begin{lstlisting}
+RuntimeError: It isn't a LL(1) grammar,
+            new added M[S'][e] = ['\\epsilon']
+            conflict with existing M[S'][e] = ['e', 'S']
+            parsing table
+\end{lstlisting}
+
+\end{document}

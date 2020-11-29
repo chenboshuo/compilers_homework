@@ -1,0 +1,61 @@
+\documentclass[../report]{subfiles}
+\graphicspath{{figures/}{../figures/}}
+
+% \renewcommand{\Comment}{$\hspace*{-0.075em}\rhd$ }
+\begin{document}
+
+语法分析表需要读写$M[A,a]$的结构，
+可以用两重字典嵌套，
+对应值为一条产生式$\id{List[str]}$,
+最终数据类型为
+$\id{Dict[str, Dict[str, List[str]]]}$
+
+语法分析表规则如下,
+对于产生式$A \to \alpha$,
+执行
+\begin{enumerate}
+  \item $\forall a \in \first(\alpha)$,
+    将$A \to \alpha$加入$M[A,a]$
+  \item 若$\epsilon \in \first(\alpha)$,对$\forall$ 终结符$b \in \follow(A)$,
+  将$A \to \alpha$加入$M[A,b]$.
+  若$\epsilon \in \first(\alpha)$
+  且$\$ \in \follow(A)$,
+  将$A \to \alpha$加入$M[A,\$]$.
+  \item 若加入语法分析表时有别的产生式，抛出异常
+\end{enumerate}
+
+根据对应规则和数据结构设计%
+\cref{alg:create_table}
+
+\begin{algorithm}[H]
+  \caption{构造语法分析表}
+  \begin{codebox}
+    \Procname{create\_table()}
+      \li \For $A,\alpha$ \kw{in} rules:
+      \Then
+        \li $f \gets \func{get\_first(\alpha)}$ \Comment 获得产生式的\first 集合
+        \li \For $a$ \kw{in} $f$:
+        \Then
+          \li $\func{add}(M[A,a],\alpha)$ \Comment 具体实现函数中会检测$M[A,a]$中是否已经有产生式并抛出异常
+        \End
+        \li \If $\epsilon \in f$:
+        \Then
+          \li \For $b \in \follow(A)$:
+          \Then
+            \li add($M[A,b],\alpha$)
+          \End
+          \li \If $\$ \in \follow(A)$:
+          \Then
+            \li add($M[A,\$],\alpha$)
+          \End
+        \End
+      \End
+  \end{codebox}
+  \label{alg:create_table}
+\end{algorithm}
+
+\cref{alg:create_table} 的对应python实现见
+\url{https://compilers-homework.readthedocs.io/en/latest/_modules/LL1Parser/#LL1Parser.create_table}
+
+
+\end{document}

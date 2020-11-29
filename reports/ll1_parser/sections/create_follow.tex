@@ -4,103 +4,81 @@
 % \renewcommand{\Comment}{$\hspace*{-0.075em}\rhd$ }
 \begin{document}
 
-程序$\func{first}(X)$集合规则如下
+\follow 集合规则如下
 
 \begin{enumerate}
-  \item 如果$X$为终结符，则 $\first (X) = \{ X \}$
-  \item 若$X$ 为非终结符，$X \to Y_1, Y_2, \dots, Y_k (k \ge 1), Y_1 Y_2 \dots Y_{i-1} \xRightarrow{*}\epsilon$,即$\epsilon \in \first(Y_j), j=1,2,\dots i-1$, 将$\first (X_i)$中所有元素加入$\first (X)$
-  \item 对于$X \to \epsilon$, 直接将$\epsilon$加入$\first (X) $
+  \item 如果$S$为终结符，则 输入串的结束标记符$ \$ \in \follow(S)$
+  \item 对于产生式$A \to \alpha B \beta$, $(\first (\beta) - \{\epsilon \}) \subset \follow(B)$
+  \item 对于产生式$A \to \alpha B$,或$A \to \alpha B \beta$,
+    $\beta \xRightarrow{*} \epsilon$,
+    则$\follow (A) \subset \follow(B)$
+
 \end{enumerate}
 
 根据对应规则和数据结构设计
-\cref{alg:create_first}
+\cref{alg:create_follow}
 
 \begin{algorithm}[H]
   \caption{生成终结符的first集合并存储}
   \begin{codebox}
-    \Procname{create\_first()}
-      \li \textbf{queue} \id{nonterminals\_rules} \Comment[8] 存储暂时没法处理的终结符
-      \li \For left, rule \textbf{in} \id{rules}:
-        \Comment[7.5] 迭代每一条规则
+    \Procname{create\_follow()}
+      \li \follow $(S) \gets \follow (s) \cup \{\$\}$
+        \Comment 将输入右标记加入起始符的\follow 集合中
+      \li \kw{queue} $q$
+        \Comment 保存$(A,B) \follow(B) \subset \follow(A)$
+      \li \For $l,\alpha$ \kw{in} rules:
       \Then
-        \li $x \gets \id{rule[0]}$ \Comment $x$ 为产生式左边第一个符号
-        \li \If $ x \in$ \id{terminals}:
-          \Comment[5.7] 产生式的第一个符号是终结符
+        \li $add(\alpha,\epsilon)$ \Comment 在规则最后添加空串标记
+        \li \For $i=0$ \To \func{length}($\alpha$):
         \Then
-          \li \first(left) $\gets \first (\id{left}) \cup \{ x \}$ \Comment 将终结符加入左部的\first 集合
-        % \End
-        \li \Else \If $ x = \epsilon$:
-        % \Then
-          \li contain\_empty $\gets contain_empty \cup \{ x \}$
-        % \End
-        \li \Else: \Comment[2] 终结符稍后处理
-        % \Then
-          \li
-            \id{nonterminals\_rules}
-              .\func{enque}((left,rule))
-                \Comment[2] 将对应的信息入队
+          \li \If $\alpha[i] \in \id{nonterminals}$:
+            \Then
+              \li \If $\alpha[i+1] \in \id{nonterminals}$:
+              \Then
+                \li $\follow(\alpha[i]) \gets \follow(\alpha[i]) + \first(\alpha[i+1]) - \{ \epsilon \}$
+              \End
+              \li \If $\alpha[i+1] \in \{ X| X \xRightarrow{*} \epsilon \}$:
+              \Then
+                \li $q.enque\big((\alpha[i],l)\big)$
+                \li \Else \If $\alpha[i+1] \in \id{terminals}$:
+                \li $\follow(\alpha[i]) =  \follow(\alpha[i]) \cup \{\alpha[i+1]\}$
+              \End
+            \End
         \End
-      \End
-      \li \While \id{nonterminals\_rules}: \Comment 若队不空
-      \Then
-        \li $\id{left,rule} \gets \id{nonterminals}.\func{dequeue}()$
-        \li $x \gets \id{rule[0]}$
-        \li \If $x \in \id{firsts}$: \Comment firsts 为当前有first集合的非终结符的集合，
+        \li $q.enque\big((None,None)\big)$ \Comment 结尾的标志符
+        \li has\_enlarged = False
+        \li \While $q$:
         \Then
-          \zi \Comment[5.5] 也就是说，他们已经有非终结符在first 集合中
-          \li \first (left) $\gets \first (\id{left}) \cup \first (x)$
-        % \End
-        \li \Else :
-        % \Then
-          \li
-            \id{nonterminals\_rules}
-              .\func{enque}$\big((\id{left,rule})\big)$
-        \End
-        \li \If $x \in contain\_empty$: \Comment $x$ 可能包含空串
-        \Then
-          \li \If rule[1]: \Comment 有其他的符号
+          \li $t,\ell = q.\func{deque()}$
+          \li \If $\ell$\kw{is None}:
           \Then
-            \li nonterminals.enque$\big((\id{left, rule[1:]})\big)$ \Comment 将后续字符加入处理队列
+            \li \If \kw{not} has\_enlarged:
+            \Then
+              \li \kw{break} \Comment 集合不在增大，退出
+            \li \Else:
+              \li has\_enlarged $\gets$ False
+              \li $q.$enque$\big((None,None)\big)$
+            \End
+            \Else :
+              \li $A \gets \follow(t)$ \Comment 末尾作为较大的集合
+              \li $B \gets \follow(\ell)$ \Comment $B \subset A$
+              \li $N \gets A \cup B$
+              \li \If $A \neq N$: \Comment 集合已经被扩大
+              \Then
+                \li has\_enlarged $\gets$ True
+                \li \follow(t) $\gets N$
+              \End
+              \li q.enque$\big((t,\ell)\big)$
           \End
         \End
       \End
+
   \end{codebox}
-  \label{alg:create_first}
+  \label{alg:create_follow}
 \end{algorithm}
 
-\cref{alg:create_first} 的对应python实现见
-\url{https://compilers-homework.readthedocs.io/en/latest/_modules/LL1Parser/#LL1Parser.create_first}
-
-类似的，可以求表达式的文法，
-我们可以利用
-\cref{alg:create_first}
-的结果。
-
-
-% \cref{alg:first}
-\begin{algorithm}[H]
-  \caption{求 $first(\alpha)$}
-  \begin{codebox}
-    \Procname{get\_first($\alpha$)}
-      \li $x \gets \alpha[0]$ \Comment $x$ 为表达式第一个字符
-      \li \If $x \in \id{terminals}$ \textbf{or} $x = \epsilon$:
-      \Then
-        \li \Return $\{ x \}$
-      \End
-      \li $s \gets \first(x)$
-      \li \While $\epsilon \in s$:
-      \Then
-        \li $n \gets  get\_first(\alpha[1:])$
-          \Comment 递归的求出接下来的表达式的\first 集合
-        \li $s \gets s \cup n$
-      \End
-
-      \li \Return $s$
-  \end{codebox}
-  \label{alg:first}
-\end{algorithm}
-
-这部分代码在\url{https://compilers-homework.readthedocs.io/en/latest/_modules/LL1Parser/#LL1Parser.get_first}中实现
+\cref{alg:create_follow} 的对应python实现见
+\url{https://compilers-homework.readthedocs.io/en/latest/_modules/LL1Parser/#LL1Parser.create_follow}
 
 
 \end{document}

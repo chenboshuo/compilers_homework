@@ -60,11 +60,11 @@ grammer.display_rules(raw=True)
 ## calculate and see the first,follow sets
 
 ```python
-grammer.display_first_sets()
+grammer.display_first_sets(raw=True)
 ```
 
 ```python
-grammer.display_follow_sets()
+grammer.display_follow_sets(raw=True)
 ```
 
 ## create and display the parsing table
@@ -74,7 +74,7 @@ grammer.parsing_table
 ```
 
 ```python
-grammer.display_parsing_table(raw=True)
+grammer.display_parsing_table()
 ```
 
 # test a wrong grammer
@@ -89,4 +89,12 @@ for g in w:
 
 ```python
 wrong = LL1Parser(w)
+```
+
+```python
+wrong.display_rules(raw=True)
+```
+
+```python
+
 ```
