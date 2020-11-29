@@ -2,6 +2,7 @@
 convert regular expression to dfa
 
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d1ba4811fe714735a88dd3930ecf3575)](https://app.codacy.com/gh/chenboshuo/compilers_homework?utm_source=github.com&utm_medium=referral&utm_content=chenboshuo/compilers_homework&utm_campaign=Badge_Grade)
 [![Documentation Status](https://readthedocs.org/projects/compilers-homework/badge/?version=latest)](https://compilers-homework.readthedocs.io/en/latest/?badge=latest)
 
 
