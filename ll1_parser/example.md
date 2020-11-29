@@ -13,26 +13,29 @@ jupyter:
     name: ~ython3
 ---
 
-# test a LL(1) grammar
+# Example
 
 
-## input a ll(1) grammar
+## Test a LL(1) Grammar
+
+
+### Input a LL(1) Grammar
 
 ```python
-from IPython.display import display, Math, Latex 
+from IPython.display import display, Math
 ```
 
 ```python
-g = [r"E \to T E'", 
-     r"E' \to + T E' | \epsilon ", 
-     r"T \to F T'", 
+g = [r"E \to T E'",
+     r"E' \to + T E' | \epsilon ",
+     r"T \to F T'",
      r"T' \to * F T' | \epsilon ",
      r"F \to ( E ) | \textbf{id}"]
 ```
 
 ```python
 for item in g:
-    display(Math(item)) 
+    display(Math(item))
 ```
 
 ```python
@@ -47,7 +50,7 @@ from LL1Parser import LL1Parser
 grammer = LL1Parser(g)
 ```
 
-## store and display the rules
+### Store and Display the Rules
 
 ```python
 grammer.rules
@@ -57,7 +60,7 @@ grammer.rules
 grammer.display_rules(raw=True)
 ```
 
-## calculate and see the first,follow sets
+### Calculate and See the First, Follow Sets
 
 ```python
 grammer.display_first_sets(raw=True)
@@ -67,7 +70,7 @@ grammer.display_first_sets(raw=True)
 grammer.display_follow_sets(raw=True)
 ```
 
-## create and display the parsing table
+### Create and Display the Parsing Table
 
 ```python
 grammer.parsing_table
@@ -77,7 +80,7 @@ grammer.parsing_table
 grammer.display_parsing_table()
 ```
 
-# test a wrong grammer
+## Test a Wrong Grammer
 
 ```python
 w = [r"S \to i E t S S' | a",
@@ -89,10 +92,6 @@ for g in w:
 
 ```python
 wrong = LL1Parser(w)
-```
-
-```python
-wrong.display_rules(raw=True)
 ```
 
 ```python

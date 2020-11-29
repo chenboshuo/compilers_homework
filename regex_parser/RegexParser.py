@@ -13,10 +13,10 @@ class RegexParser:
         <term> ::= { <factor> }
 
         <factor> ::= <base> { '*' }
-                    
+
         <base> ::= <char>
                 |  '\\' <char>
-                |  '(' <regex> ')'  
+                |  '(' <regex> ')'
 
 
     :param pattern: the pattern to match the string
@@ -28,7 +28,7 @@ class RegexParser:
     # alphabet = set([chr(i) for i in range(65, 91)])\
     #     .union([chr(i) for i in range(97, 123)])\
     #     .union([chr(i) for i in range(48, 58)])
-    
+
 
     def __init__(self, pattern: str):
         """store and parse a apttern
@@ -63,7 +63,7 @@ class RegexParser:
         :rtype: str
         """
         return self.pattern[0]
-    
+
     def eat(self, item:str) -> None:
         """eat(item) consumes the next item of input, failing if not equal to item.
 
@@ -76,7 +76,7 @@ class RegexParser:
             self.pattern = self.pattern[1:]
         else:
             raise RuntimeError(f"expect: {item}; got {self.peek()}")
-    
+
     def next(self) -> str:
         """returns the next item of input and consumes it;
 
@@ -94,12 +94,12 @@ class RegexParser:
 
             <base> ::= <char>
                     |  '\\' <char>
-                    |  '(' <regex> ')'  
+                    |  '(' <regex> ')'
 
         :return: Automata of this part
         :rtype: Automata
         """
-        if self.peek() == '(': 
+        if self.peek() == '(':
             self.eat('(')
             r = self.parse_regex()
             self.eat(')')
@@ -111,16 +111,16 @@ class RegexParser:
             return Automata.basic_construct(esc)
         else:
             return Automata.basic_construct(self.next())
-    
+
     def parse_factor_part(self) -> Automata:
         base = self.parse_base_part()
 
         while(self.pattern and self.peek() == '*'):
             self.eat('*')
             base = Automata.star_operation(base)
-        
+
         return base
-    
+
     def parse_term_part(self) -> Automata:
         """check that it has not reached the boundary of a term or the end of the input:
 
@@ -135,12 +135,12 @@ class RegexParser:
         while(self.pattern and self.peek() != ')' and self.peek() != '|'):
             next_factor = self.parse_factor_part()
             factor = Automata.concatenation(factor, next_factor)
-        
+
         return factor
 
     def parse_regex(self) -> Automata:
-        """For regex() method, we know that we must parse at least one term, 
-        and whether we parse another 
+        """For regex() method, we know that we must parse at least one term,
+        and whether we parse another
 
         .. code-block::text
 
@@ -157,13 +157,13 @@ class RegexParser:
             return Automata.union(term, regex)
         else:
             return term
-            
+
 
 
 if __name__ == "__main__":
     def figure_path(s):
         return f"../reports/regex_parser/figures/{s}.pdf"
-    
+
     # test the cases of the only letter
     test1 = RegexParser("a")
     print(test1.parse_base_part())
@@ -197,7 +197,7 @@ if __name__ == "__main__":
                 1->2 on '\epsilon'
                 1->2 on 'a'
 
-                2->1 on '\epsilon'    
+                2->1 on '\epsilon'
     """
 
     test4 = RegexParser('ab')
@@ -216,7 +216,7 @@ if __name__ == "__main__":
                 5->6 on 'b'
 
                 4->5 on '\epsilon'
-    """    
+    """
     nfa1 = RegexParser('(a|b)').parse_regex()
     print(nfa1)
     # # which is best
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     # import time
     # l = []
     # for i in range(100):
-    #     s = int(random.random() * 100000000)  
+    #     s = int(random.random() * 100000000)
     #     nfa1.draw(f'/tmp/ab/{s}.pdf',seed=s)
     #     l.append(s)
     # time.sleep(10)

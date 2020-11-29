@@ -1,13 +1,13 @@
 from collections import defaultdict, deque
 from typing import *
-from IPython.display import display, Math, Latex
+from IPython.display import display, Math
 import itertools
 
 
 class LL1Parser:
     r"""a set of algorithms to analyse the LL(1) grammer
 
-        :param rules: the LL(1) grammer,you need input using latex gammer and 
+        :param rules: the LL(1) grammer,you need input using latex gammer and
             sparated by spaces.
 
             for instance, in you want to input:
@@ -26,12 +26,13 @@ class LL1Parser:
 
             .. jupyter-execute::
 
-                from LL1Parser import LL1Parser            
-                g = [r"E \to T E'", 
-                    r"E' \to + T E' | \epsilon ", 
-                    r"T \to F T'", 
+                from LL1Parser import LL1Parser
+                g = [r"E \to T E'",
+                    r"E' \to + T E' | \epsilon ",
+                    r"T \to F T'",
                     r"T' \to * F T' | \epsilon ",
-                    r"F \to ( E ) | \textbf{id}"]                    
+                    r"F \to ( E ) | \textbf{id}"
+                    ]
                 grammer = LL1Parser(g)
 
         :type rules: List[str]
@@ -44,7 +45,7 @@ class LL1Parser:
 
             grammer.display_rules()
 
-        You can see the first sets and follow sets 
+        You can see the first sets and follow sets
         using `display_first_sets()`, for examples:
 
         .. jupyter-execute::
@@ -76,11 +77,11 @@ class LL1Parser:
             self.start_symbol = rules[0].split()[0]
         # save rules
         self.rules: Dict[str, List[str]] = defaultdict(list)
-        """the rules of the gammer, 
-            `self.rules[T] = L`, 
-            `L[i]= items`, 
+        """the rules of the gammer,
+            `self.rules[T] = L`,
+            `L[i]= items`,
             `items[k] = symbol`,
-            where `T` is a terminal, 
+            where `T` is a terminal,
             `i` is the index of alternatives
             `items` is the list of the symbols of a rule
         """
@@ -277,7 +278,7 @@ class LL1Parser:
             and $ is the input right endmarker
 
             2. if there is a production :math:`A \to \alpha B \beta`,
-            then everything in `first(B)` except :math:`\epsilon` 
+            then everything in `first(B)` except :math:`\epsilon`
             is in `follow(B)`
 
             3. if there is a production :math:`A \to \alpha B`,
@@ -335,7 +336,7 @@ class LL1Parser:
 
             .. jupyter-execute::
 
-                from IPython.display import display, Math, Latex 
+                from IPython.display import display, Math, Latex
                 w = [r"S \to i E t S S' | a",
                     r"S' \to e S | \epsilon",
                     r"E \to b"]
@@ -361,10 +362,10 @@ class LL1Parser:
 
     def create_table(self):
         r"""create a predictive parsing table
-        For each production :math:`A \to \alpha` of the grammar, 
+        For each production :math:`A \to \alpha` of the grammar,
         do the following:
 
-        1. For each terminal :math:`a`, add :math:`A \to \alpha` 
+        1. For each terminal :math:`a`, add :math:`A \to \alpha`
         to `M[A,a]`.
 
         2. If :math:`\epsilon` in first(:math:`\alpha`),

@@ -6,8 +6,6 @@ from __future__ import annotations  # type hint within a class
 from typing import *
 # see https://stackoverflow.com/questions/41135033/type-hinting-within-a-class
 from matplotlib import pyplot as plt
-import networkx as nx
-import matplotlib as mpl
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
@@ -149,7 +147,7 @@ class Automata:
         :type seed: int
 
         if you haven't installed network2tikz,
-        you need install it by 
+        you need install it by
 
         .. code-block:: bash
 
@@ -173,7 +171,7 @@ class Automata:
 
         plot((nodes, edges), save,
             #  layout="spring_layout",
-             seed=seed, 
+             seed=seed,
              canvas=(10,10),
              node_label_as_id=True,
              node_color=node_colors,
@@ -325,7 +323,7 @@ if __name__ == "__main__":
         transitions:
                 4->5 on 'a'
                 4->5 on 'b'
-                4->4 on 'b'    
+                4->4 on 'b'
         """
 
     # test basic construct
@@ -337,7 +335,7 @@ if __name__ == "__main__":
     start state:    1
     final state:    {2}
     transitions:
-            1->2 on 'a'    
+            1->2 on 'a'
     """
 
     # test star operation
@@ -369,7 +367,7 @@ if __name__ == "__main__":
                 1->2 on 'a'
                 1->2 on '\epsilon'
 
-                2->1 on '\epsilon'    
+                2->1 on '\epsilon'
     """
 
     # test parallel union
@@ -379,7 +377,7 @@ if __name__ == "__main__":
     test3.draw(save=figure_path('test_union'),seed=79744993) # 1111
     # import random
     # for i in range(50):
-    #     s = int(random.random() * 100000000)  
+    #     s = int(random.random() * 100000000)
     #     test3.draw(f'/tmp/{s}.pdf',seed=s)
     print(test3)
     r"""output
