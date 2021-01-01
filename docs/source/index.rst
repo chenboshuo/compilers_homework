@@ -33,5 +33,6 @@ Indices and tables
    :caption: Contents:
 
    regex_parser
+   grammar
    ll1_parser/api
    reference
