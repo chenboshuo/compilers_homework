@@ -25,3 +25,11 @@
 # jupyter
 **/.ipynb_checkpoints/
 **/.virtual_documents/
+
+# venv
+**/venv
+*.egg-info
+
+# test cache
+.coverage
+htmlcov

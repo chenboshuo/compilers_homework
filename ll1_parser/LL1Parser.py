@@ -3,7 +3,7 @@ from typing import *
 from IPython.display import display, Math
 import itertools
 import sys
-sys.path.insert(0,"../")
+# sys.path.insert(0,"../")
 from grammar import Grammar
 
 
