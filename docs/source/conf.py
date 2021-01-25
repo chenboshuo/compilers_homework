@@ -105,11 +105,11 @@ latex_elements = {
 
 ########### TRICK FOUND ON SOME TUTORIAL : ADD IN THE MOCK_MODULES ANY EXTERNAL MODULE YOU'RE USING IN YOUR PACKAGE.
 
-import mock
-
-MOCK_MODULES = ['matplotlib', 'matplotlib.pyplot']
-for mod_name in MOCK_MODULES:
-    sys.modules[mod_name] = mock.Mock()
+# import mock
+#
+# MOCK_MODULES = ['matplotlib', 'matplotlib.pyplot']
+# for mod_name in MOCK_MODULES:
+#     sys.modules[mod_name] = mock.Mock()
 
 
 autodoc_default_options = {

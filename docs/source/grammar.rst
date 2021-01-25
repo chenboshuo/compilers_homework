@@ -5,16 +5,15 @@ Grammer API docs
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+  :maxdepth: 2
+  :caption: Contents:
 
 
-LL1Parser class
--------------------
- .. autoclass:: grammar.Grammar
-   :members:
 
- .. raw:: latex
+.. autoclass:: grammar.Grammar
+  :members:
 
-     \subsection{Source Code}
-     \lstinputlisting{../../../grammer.py}
+.. raw:: latex
+
+  \subsection{Source Code}
+  \lstinputlisting{../../../grammer.py}

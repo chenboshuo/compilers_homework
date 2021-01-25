@@ -6,6 +6,9 @@
 Welcome to my compilers homework's documentation!
 =====================================================
 
+.. image:: https://travis-ci.com/chenboshuo/compilers_homework.svg?branch=main
+    :target: https://travis-ci.com/chenboshuo/compilers_homework
+
 .. image:: https://wakatime.com/badge/github/chenboshuo/compilers_homework.svg
     :target: https://wakatime.com/badge/github/chenboshuo/compilers_homework
 

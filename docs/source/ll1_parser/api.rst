@@ -9,12 +9,11 @@ LL1 Parser API docs
    :caption: Contents:
 
 
-LL1Parser class
--------------------
- .. autoclass:: LL1Parser.LL1Parser
-   :members:
 
- .. raw:: latex
+.. automodule:: ll1_parser.LL1Parser
+  :members:
 
-     \subsection{Source Code}
-     \lstinputlisting{../../../ll1_parser/LL1Parser.py}
+.. raw:: latex
+
+  \subsection{Source Code}
+  \lstinputlisting{../../../ll1_parser/LL1Parser.py}
