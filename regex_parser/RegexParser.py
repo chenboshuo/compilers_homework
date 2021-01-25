@@ -1,4 +1,4 @@
-from Automata import Automata
+from regex_parser.Automata import Automata
 
 
 class RegexParser:
