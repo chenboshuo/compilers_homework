@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../../regex_parser'))
 sys.path.insert(0, os.path.abspath('../../ll1_parser'))
 sys.path.insert(0, os.path.abspath('../../'))
 
-package_path = os.path.abspath('../../ll1_parser')
+package_path = os.path.abspath('../../')
 os.environ['PYTHONPATH'] = ':'.join((package_path, os.environ.get('PYTHONPATH', '')))
 
 # -- Project information -----------------------------------------------------

@@ -29,7 +29,7 @@ class LL1Parser(Grammar):
 
             .. jupyter-execute::
 
-                from LL1Parser import LL1Parser
+                from ll1_parser.LL1Parser import LL1Parser
                 g = [r"E \to T E'",
                     r"E' \to + T E' | \epsilon ",
                     r"T \to F T'",
