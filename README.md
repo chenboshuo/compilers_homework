@@ -3,9 +3,10 @@
 -   convert regular expression to DFA 正则表达式转换成DFA
 -   LL(1) grammer parser LL(1) 文法分析程序(只是构造语法分析表)
 
+[![codecov](https://codecov.io/gh/chenboshuo/compilers_homework/branch/main/graph/badge.svg?token=1YTE46JGF3)](https://codecov.io/gh/chenboshuo/compilers_homework)
 [![Build Status](https://travis-ci.com/chenboshuo/compilers_homework.svg?branch=main)](https://travis-ci.com/chenboshuo/compilers_homework)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d1ba4811fe714735a88dd3930ecf3575)](https://app.codacy.com/gh/chenboshuo/compilers_homework?utm_source=github.com&utm_medium=referral&utm_content=chenboshuo/compilers_homework&utm_campaign=Badge_Grade)
-[![HitCount](http://hits.dwyl.com/chenboshuo/compilers_homeworks.svg)](http://hits.dwyl.com/chenboshuo/compilers_homeworks)
+[![HitCount](http://hits.dwyl.com/chenboshuo/compilers_homework.svg)](http://hits.dwyl.com/chenboshuo/compilers_homework)
 [![Documentation Status](https://readthedocs.org/projects/compilers-homework/badge/?version=latest)](https://compilers-homework.readthedocs.io/en/latest/?badge=latest)
 ![GitHub repo size](https://img.shields.io/github/repo-size/chenboshuo/compilers_homework.svg)
 [![time tracker](https://wakatime.com/badge/github/chenboshuo/compilers_homework.svg)](https://wakatime.com/badge/github/chenboshuo/compilers_homework)

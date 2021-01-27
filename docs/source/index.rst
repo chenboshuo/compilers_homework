@@ -6,22 +6,26 @@
 Welcome to my compilers homework's documentation!
 =====================================================
 
+
+.. image:: https://codecov.io/gh/chenboshuo/compilers_homework/branch/main/graph/badge.svg?token=1YTE46JGF3
+  :target: https://codecov.io/gh/chenboshuo/compilers_homework
+
 .. image:: https://travis-ci.com/chenboshuo/compilers_homework.svg?branch=main
-    :target: https://travis-ci.com/chenboshuo/compilers_homework
+  :target: https://travis-ci.com/chenboshuo/compilers_homework
 
 .. image:: https://wakatime.com/badge/github/chenboshuo/compilers_homework.svg
-    :target: https://wakatime.com/badge/github/chenboshuo/compilers_homework
+  :target: https://wakatime.com/badge/github/chenboshuo/compilers_homework
 
-.. image:: http://hits.dwyl.com/chenboshuo/compilers_homeworks.svg
-    :target: http://hits.dwyl.com/chenboshuo/compilers_homeworks
+.. image:: http://hits.dwyl.com/chenboshuo/compilers_homework.svg
+  :target: http://hits.dwyl.com/chenboshuo/compilers_homework
 
 .. image:: https://img.shields.io/github/repo-size/chenboshuo/compilers_homework.svg
 
 .. image:: https://api.codacy.com/project/badge/Grade/d1ba4811fe714735a88dd3930ecf3575
-    :target: https://app.codacy.com/gh/chenboshuo/compilers_homework?utm_source=github.com&utm_medium=referral&utm_content=chenboshuo/compilers_homework&utm_campaign=Badge_Grade
+  :target: https://app.codacy.com/gh/chenboshuo/compilers_homework?utm_source=github.com&utm_medium=referral&utm_content=chenboshuo/compilers_homework&utm_campaign=Badge_Grade
 
 .. image:: https://img.shields.io/lgtm/grade/python/g/chenboshuo/compilers_homework.svg?logo=lgtm&logoWidth=18
-    :target: https://lgtm.com/projects/g/chenboshuo/compilers_homework/context:python
+  :target: https://lgtm.com/projects/g/chenboshuo/compilers_homework/context:python
 
 Indices and tables
 -------------------------------------------
