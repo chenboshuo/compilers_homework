@@ -17,7 +17,7 @@
 .vscode
 
 # sphinx docs
-**/build/*
+**/build/
 
 # python
 **/__pycache__/
@@ -33,3 +33,4 @@
 # test cache
 .coverage
 htmlcov
+.pytest_cache
