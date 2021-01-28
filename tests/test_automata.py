@@ -1,7 +1,8 @@
 from regex_parser.Automata import Automata
 
 def figure_path(s):
-    return f"reports/regex_parser/figures/{s}.pdf"
+    # return f"reports/regex_parser/figures/{s}.pdf"
+    return f"reports/regex_parser/figures/{s}.tex"
 
 def test_basic():
     test = Automata(set('ab'))
