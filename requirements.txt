@@ -3,3 +3,4 @@ IPython
 jupyter-sphinx
 sphinx_rtd_theme
 matplotlib
+pytest
