@@ -2,7 +2,7 @@ from regex_parser.RegexParser import RegexParser
 
 def figure_path(s):
         # return f"reports/regex_parser/figures/{s}.pdf"
-        return f"reports/regex_parser/figures/{s}.tex"
+        return f"tests/__pycache__/{s}.tex"
 
 def test_one_letter():
     test1 = RegexParser("a")
