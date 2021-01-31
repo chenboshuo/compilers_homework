@@ -13,16 +13,17 @@ coverage: ./venv/bin/coverage
 	$(BIN)pip install coverage
 
 ## make install: create virtual environment and install requirment
-install : ./venv/installed
+install : ./venv/touch_installed
 
-./venv/installed : requirements.txt
+./venv/touch_installed : requirements.txt venv
 	$(BIN)pip install -r requirements.txt
 	$(BIN)pip install -e .
-	touch ./venv/installed
+	touch ./venv/touch_installed
 
 ## make venv : make the virtual environment,
 ## : : attention you are not enter virtual environments
 venv: ./venv/bin/activate
+./venv/bin/activate:
 	python -m venv venv
 
 ## make clean: clean the temp files
