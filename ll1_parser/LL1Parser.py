@@ -2,8 +2,8 @@ from collections import defaultdict, deque
 from typing import *
 from IPython.display import display, Math
 import itertools
-# import sys
-# sys.path.insert(0,"../")
+from rich.console import Console
+from rich.syntax import Syntax
 from grammar import Grammar
 
 
@@ -147,7 +147,9 @@ class LL1Parser(Grammar):
             contents += s
         contents += end
         if raw:
-            print(contents)
+            # print(contents)
+            syntax = Syntax(contents, "latex")
+            Console().print(syntax)
 
         display(Math(contents))
 
@@ -334,4 +336,6 @@ class LL1Parser(Grammar):
         content = begin+header + cells + end
         display(Math(content))
         if raw:
-            print(content)
+            syntax = Syntax(content, "latex")
+            Console().print(syntax)
+            # print(content)

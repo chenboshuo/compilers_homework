@@ -1,7 +1,8 @@
 from typing import * # List
 from collections import defaultdict
 from IPython.display import display, Math
-
+from rich.console import Console
+from rich.syntax import Syntax
 
 class Grammar:
     """the class represent a grammer
@@ -66,7 +67,9 @@ class Grammar:
             begin += s
 
         if raw:
-            print(begin+end)
+            # print(begin+end)
+            syntax = Syntax(begin+end, "latex")
+            Console().print(syntax)
 
         display(Math(begin+end))
 

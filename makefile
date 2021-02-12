@@ -26,6 +26,14 @@ venv: ./venv/bin/activate
 ./venv/bin/activate:
 	python -m venv venv
 
+## make notebook: open a jupyter notebook
+notebook: ./venv/touch_ipython_installed
+	$(BIN)jupyter notebook
+
+./venv/touch_ipython_installed: ./venv/touch_installed
+	$(BIN)python -m pip install ipykernel
+	$(BIN)ipython kernel install --user --name=venv
+	touch ./venv/touch_ipython_installed
 ## make clean: clean the temp files
 clean:
 	git clean -fXd
