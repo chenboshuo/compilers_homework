@@ -19,7 +19,7 @@ plt.rcParams.update({
 
 
 class Automata:
-    """
+    r"""
     class to represent a automata
 
     :param input_alphabet: a set of input symbols
@@ -42,15 +42,6 @@ class Automata:
         self.start_state = None
         self.final_states = set()
         self.transitions = dict()
-
-    # @staticmethod
-    # def empty_string() -> str:
-    #     r"""get the symbol of empty_string symbol :math:`\epsilon`
-
-    #     :return: r'\epsilon'
-    #     :rtype: str
-    #     """
-    #     return r'\epsilon'
 
     def set_start_state(self, state: int):
         """set the start state
@@ -251,7 +242,7 @@ class Automata:
 
     @staticmethod
     def union(basic: Automata, parallel: Automata) -> Automata:
-        """handle the regex s|t by union these NFA
+        """handle the regex `s|t` by union these NFA
 
         :param basic: the NFA will change after union
         :type basic: Automata
@@ -286,3 +277,21 @@ class Automata:
 
         del parallel
         return basic
+
+    def e_closure(self,state:int) -> Set[str]:
+        r"""Set of NFA states reachable from NFA state `state`
+        on :math:`\epsilon`-transitions alone.
+
+        :param state: the NFA state
+        :type state: int
+        :return: the set of reachable states
+        :rtype: Set[str]
+        """
+        reachable_set = set([state])
+        for target, s in self.transitions[state].items():
+            if '\\epsilon' in s:
+                reachable_set.add(target)
+                reachable_set |= self.e_closure(target)
+        
+        return reachable_set
+

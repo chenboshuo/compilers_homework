@@ -83,3 +83,11 @@ def test_parallel_union():
         5: {6: {'\\epsilon'}}
     }
     assert test3.transitions == expect
+
+def test_e_closure():
+    test1 = Automata.basic_construct(set(['a']))
+    test2 = Automata.basic_construct(set(['b']))
+    test3 = Automata.union(test1, test2)
+    reachable_set = test3.e_closure(1)
+    expect = set([1,2,4])
+    assert reachable_set == expect
