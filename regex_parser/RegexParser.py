@@ -39,22 +39,6 @@ class RegexParser:
         self.pattern = pattern
         # self.NFA = self.build_NFA()
 
-    # def build_NFA(self):
-    #     """build a NFA from pattern create :class:`Automata.Automata`
-
-    #     :return: the NFA of the current pattern
-
-    #     :rtype: Automata.Automata
-    #     """
-    #     language = set()
-    #     self.buffer = []
-    #     self.automata = []
-    #     previous = r'\epsilon'
-    #     for char in self.pattern:
-    #         if char in self.alphabet:
-    #             pass
-    #             # TODO
-    #     return None
 
     def peek(self) -> str:
         """returns the next item of input without consuming it;

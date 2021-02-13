@@ -68,3 +68,4 @@ def test_complex():
     nfa2 = RegexParser('(a|b)*ab').parse_regex()
     assert nfa2.transitions == expect
     nfa2.draw(save=figure_path('complex'),seed=53138909)
+
