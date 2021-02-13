@@ -1,4 +1,5 @@
-.PHONY : clean help install venv coverage
+# .PHONY : clean help install venv coverage tests notebook
+.INTERMEDIATE : clean help install venv coverage tests notebook
 SHELL := /bin/zsh
 BIN=venv/bin/
 
