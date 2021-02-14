@@ -91,3 +91,6 @@ def test_e_closure():
     reachable_set = test3.e_closure(1)
     expect = set([1,2,4])
     assert reachable_set == expect
+    expect = set([1,2,3,4,5,6])
+    assert test3.e_closure([1,3,5]) == expect
+

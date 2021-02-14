@@ -4,6 +4,7 @@ reference https://github.com/sdht0/automata-from-regex/blob/master/AutomataTheor
 """
 from __future__ import annotations  # type hint within a class
 from typing import *
+from collections.abc import Iterable
 # see https://stackoverflow.com/questions/41135033/type-hinting-within-a-class
 from matplotlib import pyplot as plt
 plt.rcParams.update({
@@ -278,20 +279,29 @@ class Automata:
         del parallel
         return basic
 
-    def e_closure(self,state:int) -> Set[str]:
+    def e_closure(self,state) -> Set[str]:
         r"""Set of NFA states reachable from NFA state `state`
         on :math:`\epsilon`-transitions alone.
 
         :param state: the NFA state
-        :type state: int
+        :type state: int or Iterable
         :return: the set of reachable states
         :rtype: Set[str]
         """
+        if isinstance(state, Iterable):
+            reachable_set = set()
+            for s in state:
+                reachable_set |= self.e_closure(s) 
+            return reachable_set
         reachable_set = set([state])
+        if state not in self.transitions:
+            return reachable_set
         for target, s in self.transitions[state].items():
             if '\\epsilon' in s:
                 reachable_set.add(target)
                 reachable_set |= self.e_closure(target)
         
         return reachable_set
+
+
 
