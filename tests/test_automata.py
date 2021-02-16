@@ -1,4 +1,13 @@
 from regex_parser.Automata import Automata
+from regex_parser.RegexParser import RegexParser
+import pytest
+
+@pytest.fixture
+def nfa():
+    test1 = Automata.basic_construct(set(['a']))
+    test2 = Automata.basic_construct(set(['b']))
+    test3 = Automata.union(test1, test2)
+    pytest.a_union_b = test3
 
 def figure_path(s):
     # return f"reports/regex_parser/figures/{s}.pdf"
@@ -84,13 +93,17 @@ def test_parallel_union():
     }
     assert test3.transitions == expect
 
-def test_e_closure():
-    test1 = Automata.basic_construct(set(['a']))
-    test2 = Automata.basic_construct(set(['b']))
-    test3 = Automata.union(test1, test2)
+def test_e_closure(nfa):
+    test3 = pytest.a_union_b
     reachable_set = test3.e_closure(1)
     expect = set([1,2,4])
     assert reachable_set == expect
     expect = set([1,2,3,4,5,6])
     assert test3.e_closure([1,3,5]) == expect
+
+def test_move(nfa):
+    nfa = pytest.a_union_b
+    moved = nfa.move([1],'a')
+    expect = set([1,2,3,4,6])
+    assert moved == expect
 

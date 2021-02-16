@@ -303,5 +303,27 @@ class Automata:
         
         return reachable_set
 
+    def move(self,states:Iterable,symbol:str) -> Set[int]:
+        """Set of NFA states to which there is a transition
+            on a input symbol `symbol` form one state :math:`s`
+            in set states
 
-
+        :param states: the set of states
+        :type states: Iterable
+        :param symbol: input symbol
+        :type symbol: str
+        :return: the set of final sets
+        :rtype: Set[int]
+        """
+        states = set(states)
+        states |= self.e_closure(states)
+        reachable = set()
+        for state in states:
+            if state not in self.transitions:
+                continue
+            for target,s in self.transitions[state].items():
+                if symbol in s:
+                    reachable.add(target)
+        reachable |= self.e_closure(reachable)
+        states |= reachable
+        return states
