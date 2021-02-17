@@ -1,7 +1,10 @@
-# .PHONY : clean help install venv coverage tests notebook
-.INTERMEDIATE : clean help install venv coverage tests notebook
+.PHONY : docs all tests
+.INTERMEDIATE : clean help install venv coverage notebook
 SHELL := /bin/zsh
 BIN=venv/bin/
+
+## make all: make docs and make tests
+all: tests docs
 
 ## make tests : run all test cases
 tests: install coverage
@@ -35,6 +38,11 @@ notebook: ./venv/touch_ipython_installed
 	$(BIN)python -m pip install ipykernel
 	$(BIN)ipython kernel install --user --name=venv
 	touch ./venv/touch_ipython_installed
+
+## make docs: make the docs
+docs:
+	make --directory=docs html
+
 ## make clean: clean the temp files
 clean:
 	git clean -fXd
