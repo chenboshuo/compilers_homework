@@ -14,9 +14,6 @@ import os
 import sys
 import sphinx_rtd_theme
 import jupyter_sphinx
-sys.path.insert(0, os.path.abspath('../../regex_parser'))
-sys.path.insert(0, os.path.abspath('../../ll1_parser'))
-sys.path.insert(0, os.path.abspath('../../'))
 
 package_path = os.path.abspath('../../')
 os.environ['PYTHONPATH'] = ':'.join((package_path, os.environ.get('PYTHONPATH', '')))
@@ -77,6 +74,7 @@ latex_elements = {
     "figure_align": "htbp",
     "preamble": r"""
         \usepackage{listings}
+        \setcounter{tocdepth}{4}
         \definecolor{dkgreen}{rgb}{0,0.6,0}
         \definecolor{gray}{rgb}{0.5,0.5,0.5}
         \definecolor{mauve}{rgb}{0.58,0,0.82}        \lstset{

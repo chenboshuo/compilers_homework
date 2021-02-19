@@ -42,6 +42,7 @@ notebook: ./venv/touch_ipython_installed
 ## make docs: make the docs
 docs:
 	make --directory=docs html
+	make --directory=docs latexpdf
 
 ## make clean: clean the temp files
 clean:
