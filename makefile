@@ -40,7 +40,7 @@ notebook: ./venv/touch_ipython_installed
 	touch ./venv/touch_ipython_installed
 
 ## make docs: make the docs
-docs:
+docs: install
 	make --directory=docs html
 	make --directory=docs latexpdf
 

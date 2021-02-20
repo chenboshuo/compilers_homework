@@ -42,18 +42,32 @@ class LL1Parser(Grammar):
         :param start_symbol: the start symbol
         :type start_symbol: str, optional
 
-        then you can display the rules using `display_rules()`, for example:
+        then you can display the rules using 
+        :meth:`grammar.Grammar.display_rules`, for example:
 
         .. jupyter-execute::
 
             grammer.display_rules()
 
+        with parameter ``raw=True`` in 
+        :meth:`display_first_sets`,
+        :meth:`display_follow_sets`,
+        :meth:`grammar.Grammar.display_rules`,
+        :meth:`display_parsing_table`
+        can get the LaTeX codes,
+        for example:
+
+        .. jupyter-execute::
+
+            grammer.display_rules(raw=True)
+
         You can see the first sets and follow sets
-        using `display_first_sets()`, for examples:
+        using :func:`display_first_sets`, for examples:
 
         .. jupyter-execute::
 
             grammer.display_first_sets()
+        
 
         Similarly, you can see the follow set using:
 
@@ -61,7 +75,7 @@ class LL1Parser(Grammar):
 
             grammer.display_follow_sets()
 
-        The :meth:`LL1Parser.display_parsing_table`
+        The :meth:`display_parsing_table`
         can show the parsing table
 
         .. jupyter-execute::

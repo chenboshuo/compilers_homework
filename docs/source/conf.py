@@ -14,6 +14,7 @@ import os
 import sys
 import sphinx_rtd_theme
 import jupyter_sphinx
+sys.path.insert(0, os.path.abspath('../../'))
 
 package_path = os.path.abspath('../../')
 os.environ['PYTHONPATH'] = ':'.join((package_path, os.environ.get('PYTHONPATH', '')))
