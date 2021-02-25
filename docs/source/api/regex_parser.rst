@@ -12,6 +12,11 @@ regex\_parser.Automata module
    :undoc-members:
    :show-inheritance:
 
+.. raw:: latex
+
+   \subsubsection{Source Code}
+   \lstinputlisting{../../../regex_parser/Automata.py}
+
 regex\_parser.RegexParser module
 --------------------------------
 
@@ -19,6 +24,25 @@ regex\_parser.RegexParser module
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. raw:: latex
+
+   \subsubsection{Source Code}
+   \lstinputlisting{../../../regex_parser/RegexParser.py}
+
+
+regex\_parser.dfa module
+--------------------------------
+
+.. automodule:: regex_parser.dfa
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. raw:: latex
+
+  \subsubsection{Source Code}
+  \lstinputlisting{../../../regex_parser/dfa.py}
 
 
 Module contents
