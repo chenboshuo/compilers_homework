@@ -101,6 +101,7 @@ latex_elements = {
     """,
 }
 
+autoclass_content = 'both'
 
 ########### TRICK FOUND ON SOME TUTORIAL : ADD IN THE MOCK_MODULES ANY EXTERNAL MODULE YOU'RE USING IN YOUR PACKAGE.
 
