@@ -7,7 +7,9 @@ def figure_path(s):
 def test_one_letter():
     test1 = RegexParser("a")
     expect = {1: {2: {'a'}}}
-    assert test1.parse_base_part().transitions == expect
+    parser = test1.parse_base_part()
+    assert parser.transitions == expect
+    assert parser.input_alphabet == set(['a']) # prevent empty string 
 
 def test_escape_symbol():
     test2 = RegexParser("\*")
@@ -16,7 +18,9 @@ def test_escape_symbol():
 def test_parse_factor():
     test3 = RegexParser('a*')
     expect = {1: {2: {"a", "\\epsilon"}}, 2: {1: {"\\epsilon"}}}
-    assert test3.parse_factor_part().transitions == expect
+    parser = test3.parse_factor_part()
+    assert parser.transitions == expect
+    assert parser.input_alphabet == set(['a'])
 
 def test_parse_term():
     test4 = RegexParser('ab')
@@ -27,7 +31,9 @@ def test_parse_term():
         5: {6: {"b"}},
         4: {5: {"\\epsilon"}},
     }
-    test4.parse_term_part().transitions == expect
+    parser = test4.parse_term_part()
+    assert parser.transitions == expect
+    assert parser.input_alphabet == set(['a','b'])
 
 def test_simple_NFA():
     nfa1 = RegexParser('(a|b)').parse_regex()
@@ -44,6 +50,7 @@ def test_simple_NFA():
         7: {12: {"\\epsilon"}},
         2: {3: {"\\epsilon"}},
     }
+    assert nfa1.input_alphabet == set(['a','b'])
     assert nfa1.transitions == expect
     nfa1.draw(save=figure_path("a|b"),seed=79870681)
 
@@ -66,6 +73,7 @@ def test_complex():
         14: {15: {"\\epsilon"}},
     }
     nfa2 = RegexParser('(a|b)*ab').parse_regex()
+    assert nfa2.input_alphabet == set(['a','b'])
     assert nfa2.transitions == expect
     nfa2.draw(save=figure_path('complex'),seed=53138909)
 

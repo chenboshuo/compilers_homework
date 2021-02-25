@@ -101,9 +101,26 @@ def test_e_closure(nfa):
     expect = set([1,2,3,4,5,6])
     assert test3.e_closure([1,3,5]) == expect
 
+def test_e_closure_circle():
+    nfa = RegexParser('(a|b)*abb').parse_regex()
+    print(nfa.start_state)
+    nfa.e_closure(nfa.start_state)
+
+def test_e_closure_sets_1(nfa):
+    nfa = pytest.a_union_b
+    expect = set([1,2,4])
+    closure = nfa.e_closure([1])
+    assert expect == closure
+
+
+def test_e_closure_sets_2(nfa):
+    nfa = pytest.a_union_b
+    expect = set([1,2,3,4,6])
+    closure = nfa.e_closure([1,3])
+    assert expect == closure
+
 def test_move(nfa):
     nfa = pytest.a_union_b
     moved = nfa.move([1],'a')
     expect = set([1,2,3,4,6])
     assert moved == expect
-

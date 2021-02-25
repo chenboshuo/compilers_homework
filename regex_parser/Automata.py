@@ -1,5 +1,6 @@
 """
 filename src/Automata.py
+
 reference https://github.com/sdht0/automata-from-regex/blob/master/AutomataTheory.py
 """
 from __future__ import annotations  # type hint within a class
@@ -28,16 +29,17 @@ class Automata:
 
     :ivar empty_string: empty string, denoted by :math:`\epsilon`
     :ivar self.states: a finite states of S
-    :ivar self.transitions: 11
     :ivar self.input_alphabet:  a set of input symbols
+    :ivar self.start_state: the start state
     :ivar self.final_states: the set of final state
     :ivar self.transitions: the transitions functions,
         `translations[f][t] = d` where f is from state,t in to state,
         d is the dict of states where d[state] = set of input symbols
+    :vartype self.transitions: Dict[int,Dict[int,Set[str]]]
     """
     empty_string = set([r'\epsilon'])
 
-    def __init__(self, input_alphabet: set):
+    def __init__(self, input_alphabet: set = set()):
         self.states = set()  # a finite states of S
         self.input_alphabet = input_alphabet  # a set of input symbols
         self.start_state = None
@@ -72,7 +74,7 @@ class Automata:
         :param input_symbols: the transfer symbols to the next states
         :type input_symbols: set
         """
-
+        input_symbols = input_symbols.copy() # prevent the source set changing
         self.states.add(from_state)
         self.states.add(to_state)
         if from_state in self.transitions:
@@ -129,7 +131,7 @@ class Automata:
 
         self.transitions = new_transitions
 
-    def draw(self, save='temp.pdf',seed:int=None) -> None:
+    def draw(self, save='temp.pdf', seed: int = None) -> None:
         """
         draw the graph
 
@@ -162,9 +164,9 @@ class Automata:
                 edge_labels.append("| ".join(labels))
 
         plot((nodes, edges), save,
-            #  layout="spring_layout",
+             #  layout="spring_layout",
              seed=seed,
-             canvas=(10,10),
+             canvas=(10, 10),
              node_label_as_id=True,
              node_color=node_colors,
              edge_label=edge_labels,
@@ -178,21 +180,27 @@ class Automata:
         :return: the empty automata
         :rtype: Automata
         """
-        return cls.basic_construct(set([r'\epsilon']))
+        # return cls.basic_construct(set([r'\epsilon']))
+        return cls.basic_construct()
 
     @classmethod
-    def basic_construct(cls, symbol: set):
+    def basic_construct(cls, symbol= None):
         """construct NFA with a single symbol
 
         :param symbol: the symbol
-        :type symbol: str
+        :type symbol: Set[str] or str
         :return: a NFA
         :rtype: Automata
         """
-        basic = Automata(symbol)
+        if isinstance(symbol, str):
+            symbol = set([symbol])
+        input_symbol = symbol if symbol else set([r'\epsilon'])
+        basic = Automata()
+        if symbol:
+            basic.input_alphabet = input_symbol
         basic.set_start_state(1)
         basic.add_final_states(2)
-        basic.add_transition(1, 2, set(symbol))
+        basic.add_transition(1, 2, input_symbol)
         return basic
 
     @staticmethod
@@ -218,7 +226,7 @@ class Automata:
         return nfa
 
     @staticmethod
-    def concatenation(basic: Automata, addition: Automata) -> Automata:
+    def concatenation(base: Automata, addition: Automata) -> Automata:
         """union two Automata
 
         :param basic: this Automata will be changed after union
@@ -229,17 +237,19 @@ class Automata:
         :rtype: Automata
         """
         # to manage the state name conflict
-        offset = max(basic.states)
+        offset = max(base.states)
         addition.rename(offset)
+        print(base.input_alphabet,addition.input_alphabet)
+        base.input_alphabet |= addition.input_alphabet
 
-        basic.add_transition_from_dict(addition.transitions)
-        for pre_final in basic.final_states:
-            basic.add_transition(pre_final, addition.start_state,
+        base.add_transition_from_dict(addition.transitions)
+        for pre_final in base.final_states:
+            base.add_transition(pre_final, addition.start_state,
                                  Automata.empty_string)
 
-        basic.final_states = addition.final_states
+        base.final_states = addition.final_states
         del addition
-        return basic
+        return base
 
     @staticmethod
     def union(basic: Automata, parallel: Automata) -> Automata:
@@ -257,8 +267,9 @@ class Automata:
         offset = max(basic.states)
         parallel.rename(offset)
 
-        # update edges
+        # update edges and input_alphabet
         basic.add_transition_from_dict(parallel.transitions)
+        basic.input_alphabet = parallel.input_alphabet
 
         # update the start
         new_start_state = min(basic.states) - 1
@@ -279,7 +290,9 @@ class Automata:
         del parallel
         return basic
 
-    def e_closure(self,state) -> Set[str]:
+    def e_closure(self,
+                  state,
+                  reachable_set: Set[int] = None) -> Set[str]:
         r"""Set of NFA states reachable from NFA state `state`
         on :math:`\epsilon`-transitions alone.
 
@@ -288,22 +301,25 @@ class Automata:
         :return: the set of reachable states
         :rtype: Set[str]
         """
-        if isinstance(state, Iterable):
+        if not reachable_set:
             reachable_set = set()
+        if isinstance(state, Iterable):
             for s in state:
-                reachable_set |= self.e_closure(s) 
+                reachable_set |= self.e_closure(s)
             return reachable_set
-        reachable_set = set([state])
+        if state in reachable_set:
+            return reachable_set
+        reachable_set.add(state)
         if state not in self.transitions:
             return reachable_set
         for target, s in self.transitions[state].items():
             if '\\epsilon' in s:
                 reachable_set.add(target)
-                reachable_set |= self.e_closure(target)
-        
+                reachable_set |= self.e_closure(target, reachable_set)
+
         return reachable_set
 
-    def move(self,states:Iterable,symbol:str) -> Set[int]:
+    def move(self, states: Iterable, symbol: str) -> Set[int]:
         """Set of NFA states to which there is a transition
             on a input symbol `symbol` form one state :math:`s`
             in set states
@@ -321,9 +337,28 @@ class Automata:
         for state in states:
             if state not in self.transitions:
                 continue
-            for target,s in self.transitions[state].items():
+            for target, s in self.transitions[state].items():
                 if symbol in s:
                     reachable.add(target)
         reachable |= self.e_closure(reachable)
         states |= reachable
         return states
+
+    # def _get_new_state(self,
+    #     states:Dict[frozenset,int],
+    #     dfa: Automata,
+    #     cur:Set[int],
+    #     input:str):
+    #     pass
+
+    # def get_DFA(self) -> Automata:
+    #     """get the DFA from the NFA
+
+    #     :return: A DFA derivate from the current NFA
+    #     :rtype: Automata
+    #     """
+    #     dfa = Automata(input_alphabet=self.input_alphabet)
+    #     new_states = {}
+    #     initial = self.e_closure(self.start_state)
+    #     for i in self.input_alphabet:
+    #         pass
