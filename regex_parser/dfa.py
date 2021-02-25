@@ -4,7 +4,7 @@ from typing import *
 class DFA(Automata):
     """DFA have,
     for each state,
-    and for each symbols of its input alphabet exactly 
+    and for each symbols of its input alphabet exactly
     one edge with that symbol leaving that state
 
     """
@@ -21,10 +21,7 @@ class DFA(Automata):
         self.NFA_map = {}
         initial = nfa.e_closure(nfa.start_state)
         self.set_start_state(1)
-        for i in nfa.input_alphabet:
-            self._get_new_state(nfa=nfa,
-                cur=initial,
-                input_=i)
+        self._get_new_state(nfa=nfa,cur=initial)
 
     def _get_states_id(self,states_set:Set[int]) -> int:
         """get the DFA state id of the NFA states set
@@ -47,24 +44,33 @@ class DFA(Automata):
     def _get_new_state(self,
         nfa: Automata,
         cur:Set[int],
-        input_:str) -> None:
-        """a recursion method to get the new set from 
+        input_:str='') -> None:
+        """a recursion method to get the new set from
         state `cur` to new states with the input `input_`
 
         :param nfa: the nfa automata
         :type nfa: Automata
         :param cur: the sets of current states
         :type cur: Set[int]
-        :param input_: the input character
+        :param input_: the input character default to ''
         :type input_: str
         """
+        # manage the initial state
+        if not input_:
+            for i in nfa.input_alphabet:
+                self._get_new_state(nfa=nfa,cur=cur,input_=i)
+
+        # get current state and next state id
         cur_id = self._get_states_id(cur)
         to_state = nfa.move(cur,input_)
         to_id = self._get_states_id(to_state)
+
+        # stop if the states set exits
         if cur_id in self.transitions and to_id in self.transitions[cur_id]:
             return None
         self.add_transition(cur_id,to_id,set([input_]))
 
+        # recursion call to find next's next
         for i in self.input_alphabet:
             self._get_new_state(
                 nfa=nfa,
