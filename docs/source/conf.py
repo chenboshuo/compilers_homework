@@ -69,6 +69,7 @@ html_static_path = ['_static']
 
 # add source to pdf
 # reference https://github.com/sphinx-doc/sphinx/issues/6094
+latex_engine = 'xelatex'
 latex_elements = {
     "papersize": "letterpaper",
     "pointsize": "10pt",
@@ -78,7 +79,9 @@ latex_elements = {
         \setcounter{tocdepth}{4}
         \definecolor{dkgreen}{rgb}{0,0.6,0}
         \definecolor{gray}{rgb}{0.5,0.5,0.5}
-        \definecolor{mauve}{rgb}{0.58,0,0.82}        \lstset{
+        \definecolor{mauve}{rgb}{0.58,0,0.82}
+        \selectlanguage{english}
+        \lstset{
             language=Python,                 % the language of the code
             frame=tb,
             aboveskip=3mm,

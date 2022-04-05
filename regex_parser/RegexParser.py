@@ -141,6 +141,3 @@ class RegexParser:
             return Automata.union(term, regex)
         else:
             return term
-
-
-

@@ -4,8 +4,8 @@ import pytest
 
 def figure_path(s):
     # return f"reports/regex_parser/figures/{s}.pdf"
-    return f"tests/__pycache__/{s}.tex"
-    # return f"tests/__pycache__/{s}.pdf"
+    # return f"tests/__pycache__/{s}.tex"
+    return f"tests/__pycache__/{s}.pdf"
 
 @pytest.fixture
 def dfa():
@@ -26,5 +26,5 @@ def dfa():
     print(nfa.input_alphabet)
 
 def test_dfa(dfa):
-    # assert False
+    assert False
     pass
